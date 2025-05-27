@@ -317,7 +317,12 @@ public class Enemy : NetworkBehaviour
         {
             isLive = false;
             isDead = true;
+            coll.enabled = false;
+            rigid.simulated = false;
             StartCoroutine(DelayedDead());
+
+            GameManager.instance.AddKill();
+            GameManager.instance.AddExp();
         }
     }
 
