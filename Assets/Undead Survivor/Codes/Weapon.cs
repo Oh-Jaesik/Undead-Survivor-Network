@@ -1,88 +1,277 @@
+Ôªø//using UnityEngine;
+//using Mirror;
+//using UnityEngine.UIElements;
+//using UnityEngine.TextCore.Text;
+
+//public class Weapon : NetworkBehaviour
+//{
+//    public int id;
+//    public int prefabId;
+//    public float damage;
+//    public int count;
+//    public float speed;
+
+//    float timer;
+//    Player player;
+
+//    void Awake()
+//    {
+//        player = GameManager.instance.player;
+//    }
+
+//    public override void OnStartLocalPlayer()
+//    {
+//        GameManager.instance.weapon = this;
+
+//    }
+
+
+//    void Update()
+//    {
+
+//        Debug.Log("1");
+
+
+//        //if (!isServer)
+//        //{
+//        //    return;
+//        //}
+
+//        switch (id)
+//        {
+//            case 0:
+//                transform.Rotate(Vector3.back * speed * Time.deltaTime);
+//                break;
+
+//            default:
+
+//                break;
+//        }
+
+//        if (Input.GetButtonDown("Jump"))
+//        {
+//            LevelUp(20, 5);
+//        }
+//    }
+
+
+//    public void LevelUp(float damage, int count)
+//    {
+//        this.damage = damage;
+//        this.count += count;
+
+//        if (id == 0)
+//            Batch();
+//    }
+
+//    [Server]
+//    public void Init(ItemData data)
+//    {
+
+//        // Basic Set
+//        name = "Weapon " + data.itemId;
+//        //transform.parent = player.transform;
+//        transform.localPosition = Vector3.zero;
+
+//        // Property Set
+//        id = data.itemId;
+//        damage = data.baseDamage;
+//        count = data.baseCount;
+
+//        for (int index = 0; index < GameManager.instance.pool.prefabs.Length; index++)
+//        {
+//            if (data.projectile == GameManager.instance.pool.prefabs[index])
+//            {
+//                prefabId = index;
+//                break;
+//            }
+//        }
+
+//        switch (id)
+//        {
+//            case 0: // Í∑ºÏ†ë Î¨¥Í∏∞
+//                speed = -150; // ÌöåÏ†Ñ ÏÜçÎèÑ
+//                Batch();      // ÏÑúÎ≤ÑÏóêÏÑú ÏÇΩ Î∞∞Ïπò
+//                break;
+//            default: // ÏõêÍ±∞Î¶¨ Î¨¥Í∏∞
+//                speed = 0.3f; // Î∞úÏÇ¨ ÎîúÎ†àÏù¥
+//                break;
+//        }
+//    }
+
+//    [Server]
+//    void Batch()
+//    {
+//        for (int index = 0; index < count; index++)
+//        {
+//            float angle = 360f * index / count;
+//            Quaternion rot = Quaternion.Euler(0f, 0f, angle);
+//            Vector3 offset = rot * Vector3.up * 1.5f;
+
+//            GameObject bulletObj = GameManager.instance.pool.Get(prefabId, transform.position, Quaternion.identity);
+//            Bullet bullet = bulletObj.GetComponent<Bullet>();
+
+//            bullet.followTarget = transform; // weapon
+//            bullet.offset = offset;          // Ï¥àÍ∏∞ ÏúÑÏπò offset
+
+
+//            Debug.Log("2");
+
+
+
+//            bullet.Init(damage, -1, Vector3.zero);
+//        }
+//    }
+
+//}
+
+
 using UnityEngine;
 using Mirror;
-using UnityEngine.UIElements;
-using UnityEngine.TextCore.Text;
+using Unity.VisualScripting;
 
 public class Weapon : NetworkBehaviour
 {
     public int id;
     public int prefabId;
-    public float damage;
-    public int count;
     public float speed;
 
+    float timer;
+    Player player;
+
+    [SyncVar(hook = nameof(OnDamageChanged))]
+    public float damage;
+
+    [SyncVar(hook = nameof(OnCountChanged))]
+    public int count;
+
+    void Awake()
+    {
+        player = GameManager.instance.player;
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        GameManager.instance.weapon = this;
+
+
+      
+    }
 
     public override void OnStartServer()
     {
-        Init();
+        //Init();
     }
 
     void Update()
     {
-        if (!isServer)
+        
+        if (!isServer) return;
+
+        if (Input.GetButtonDown("Jump"))
         {
+            CmdLevelUp(20, 5);
+        }
+
+        if (id == 0)
+        {
+            transform.Rotate(Vector3.back * speed * Time.deltaTime);
+        }
+    }
+
+    // === ÏÑúÎ≤ÑÏóêÏÑúÎßå Ïã§ÌñâÎêòÎäî Ï¥àÍ∏∞Ìôî ===
+    [Server]
+    public void Init(ItemData data)
+    {
+        if (!isServer)
             return;
+
+        name = "Weapon " + data.itemId;
+        transform.localPosition = Vector3.zero;
+
+        id = data.itemId;
+        damage = data.baseDamage;
+        count = data.baseCount;
+
+        for (int i = 0; i < GameManager.instance.pool.prefabs.Length; i++)
+        {
+            if (data.projectile == GameManager.instance.pool.prefabs[i])
+            {
+                prefabId = i;
+                break;
+            }
         }
 
         switch (id)
         {
             case 0:
-                transform.Rotate(Vector3.back * speed * Time.deltaTime);
+                speed = -150;
+                Batch();
                 break;
-
             default:
-
+                speed = 0.3f;
                 break;
         }
-
-        if (Input.GetButtonDown("Jump"))   
-        {
-            LevelUp(20, 5);
-        }
-    }
-
-
-    public void LevelUp(float damage, int count)
-    {
-        this.damage = damage ;
-        this.count += count;
-
-        if (id == 0)
-            Batch();
     }
 
     [Server]
     public void Init()
     {
+
+
         switch (id)
         {
-            case 0: // ±Ÿ¡¢ π´±‚
-                speed = -150; // »∏¿¸ º”µµ
-                Batch();      // º≠πˆø°º≠ ª πËƒ°
+            case 0:
+                speed = -150;
+                Batch();
                 break;
-            default: // ø¯∞≈∏Æ π´±‚
-                speed = 0.3f; // πﬂªÁ µÙ∑π¿Ã
+            default:
+                speed = 0.3f;
                 break;
         }
     }
 
+    // === ÏÑúÎ≤ÑÏóêÏÑúÎßå Ïã§Ìñâ ===
+    [Command]
+    public void CmdLevelUp(float newDamage, int addCount)
+    {
+        damage = newDamage;
+        count += addCount;
+
+        if (id == 0)
+        {
+            Batch();
+        }
+    }
+
+    // === SyncVar Í∞íÏù¥ Î∞îÎÄî Îïå Ìò∏Ï∂úÎêòÎäî Hook ===
+    void OnDamageChanged(float oldValue, float newValue)
+    {
+        damage = newValue;
+    }
+
+    void OnCountChanged(int oldValue, int newValue)
+    {
+        count = newValue;
+    }
+
+    // === ÏÑúÎ≤ÑÏóêÏÑú Ï¥ùÏïå Î∞∞Ïπò ===
     [Server]
     void Batch()
     {
-        for (int index = 0; index < count; index++)
+        for (int i = 0; i < count; i++)
         {
-            float angle = 360f * index / count;
+            float angle = 360f * i / count;
             Quaternion rot = Quaternion.Euler(0f, 0f, angle);
             Vector3 offset = rot * Vector3.up * 1.5f;
 
             GameObject bulletObj = GameManager.instance.pool.Get(prefabId, transform.position, Quaternion.identity);
             Bullet bullet = bulletObj.GetComponent<Bullet>();
 
-            bullet.followTarget = transform; // weapon
-            bullet.offset = offset;          // √ ±‚ ¿ßƒ° offset
+            bullet.followTarget = transform;
+            bullet.offset = offset;
 
             bullet.Init(damage, -1, Vector3.zero);
         }
     }
-
 }

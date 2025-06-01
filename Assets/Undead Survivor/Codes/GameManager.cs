@@ -1,105 +1,3 @@
-//using System.Collections.Generic;
-//using UnityEngine;
-//using Mirror;
-//using static Mirror.SimpleWeb.Log;
-
-//public class GameManager : NetworkBehaviour
-//{
-//    public static GameManager instance;
-
-//    [Header("# Game Control")]
-//    public bool isLive;
-//    public float gameTime;
-//    public float maxGameTime = 2 * 10f;
-
-//    [Header("# Player Info")]
-//    public int playerId;
-//    public float health;
-//    public float maxHealth = 100;
-//    public int level;
-//    public int kill;
-//    public int exp;
-//    public int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
-
-//    [Header("# Game Object")]
-//    public PoolManager pool;
-//    //public Player player;
-//    public List<Player> players = new List<Player>(); // 모든 플레이어 목록
-//    //public LevelUp uiLevelUp;
-//    //public Result uiResult;
-//    //public GameObject enemyCleaner;
-
-
-//    void Awake()
-//    {
-//        instance = this;
-//    }
-
-//    [Server]
-//    void Update()
-//    {
-//        gameTime += Time.deltaTime;
-
-//        if (gameTime > maxGameTime)
-//        {
-//            gameTime = maxGameTime;
-//        }
-//    }
-
-//    //[Server]
-//    public void GetExp()
-//    {
-//        if (!isLive)
-//            return;
-
-//        exp++;
-
-//        if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)])
-//        {
-//            level++;
-//            exp = 0;
-//            //uiLevelUp.Show();
-//        }
-//    }
-
-
-
-
-
-
-
-//    public void RegisterPlayer(Player player)
-//    {
-//        if (!players.Contains(player))
-//            players.Add(player);
-//    }
-
-//    public void UnregisterPlayer(Player player)
-//    {
-//        if (players.Contains(player))
-//            players.Remove(player);
-//    }
-
-//    public Player GetNearestPlayer(Vector3 fromPosition)
-//    {
-//        Player nearest = null;
-//        float minDist = float.MaxValue;
-
-//        foreach (Player p in players)
-//        {
-//            float dist = Vector3.Distance(fromPosition, p.transform.position);
-//            if (dist < minDist)
-//            {
-//                minDist = dist;
-//                nearest = p;
-//            }
-//        }
-
-//        return nearest;
-//    }
-//}
-
-
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
@@ -132,10 +30,13 @@ public class GameManager : NetworkBehaviour
 
     [Header("# Game Object")]
     public PoolManager pool;
+    public Player player;
     public List<Player> players = new List<Player>();
     //public LevelUp uiLevelUp;
     //public Result uiResult;
     //public GameObject enemyCleaner;
+
+    public Weapon weapon;   // 추가
 
 
 
