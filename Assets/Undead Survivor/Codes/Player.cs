@@ -108,6 +108,13 @@ using Mirror;
 
 public class Player : NetworkBehaviour
 {
+
+    public override void OnStartLocalPlayer()
+    {
+        Camera.main.transform.SetParent(transform);
+        Camera.main.transform.localPosition = new Vector3(0, 0, -10); // 2D 카메라 세팅
+    }
+
     public override void OnStartServer()
     {
         GameManager.instance.RegisterPlayer(this);

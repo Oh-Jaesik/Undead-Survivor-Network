@@ -139,6 +139,14 @@ public class GameManager : NetworkBehaviour
 
 
 
+    // 추후 삭제
+    private void Start()
+    {
+        health = maxHealth;
+
+    }
+
+
     void Awake()
     {
         instance = this;
