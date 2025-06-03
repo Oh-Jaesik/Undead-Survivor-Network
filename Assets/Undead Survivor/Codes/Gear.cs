@@ -2,28 +2,19 @@ using UnityEngine;
 using UnityEngine.TextCore.Text;
 using Mirror;
 
-public class Gear : NetworkBehaviour
+public class Gear : MonoBehaviour
 {
     public ItemData.ItemType type;
     public float rate;
 
-
-    public override void OnStartLocalPlayer()
-    {
-        GameManager.instance.gear = this;
-
-    }
-
-
-
     public void Init(ItemData data)
     {
-        // Basic Set
-        //name = "Gear " + data.itemId;
-        //transform.parent = GameManager.instance.player.transform;
-        //transform.localPosition = Vector3.zero;
+        //Basic Set
+        name = "Gear " + data.itemId;
+        transform.parent = GameManager.instance.player.transform;
+        transform.localPosition = Vector3.zero;
 
-        // Property Set
+        //Property Set
         type = data.itemType;
         rate = data.damages[0];
         ApplyGear();

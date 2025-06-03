@@ -26,6 +26,10 @@ public class Player : NetworkBehaviour
     [SyncVar(hook = nameof(OnAnimControllerIndexChanged))]
     public int animControllerIndex;
 
+    public int statPoints;
+
+
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();

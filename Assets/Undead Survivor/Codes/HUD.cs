@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { Exp, Level, Kill, Time, Heatlth };
+    public enum InfoType { Exp, Level, Kill, Time, Heatlth , Stat};
     public InfoType type;
 
     Text myText;
@@ -27,6 +27,10 @@ public class HUD : MonoBehaviour
 
             case InfoType.Level:
                 myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
+                break;
+
+            case InfoType.Stat:
+                myText.text = string.Format("{0:F0} SP", GameManager.instance.player.statPoints);
                 break;
 
             case InfoType.Kill:

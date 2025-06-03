@@ -73,7 +73,7 @@ public class Weapon : NetworkBehaviour
         switch (id)
         {
             case 0:
-                speed = -150;
+                speed = 150;
                 Batch();
                 break;
             default:
@@ -90,7 +90,7 @@ public class Weapon : NetworkBehaviour
         switch (id)
         {
             case 0:
-                speed = -150;
+                speed = 150;
                 Batch();
                 break;
             default:

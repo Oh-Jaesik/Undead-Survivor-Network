@@ -59,6 +59,10 @@ public class Item : MonoBehaviour
 
     public void OnClick()
     {
+        if (GameManager.instance.player.statPoints <= 0)
+            return;
+
+
         switch (data.itemType)
         {
             case ItemData.ItemType.Melee:
@@ -91,28 +95,29 @@ public class Item : MonoBehaviour
             case ItemData.ItemType.Shoe:
                 if (level == 0)
                 {
-                    //GameObject newGear = new GameObject();
-                    //gear = newGear.AddComponent<Gear>();
+                    GameObject newGear = new GameObject();
+                    gear = newGear.AddComponent<Gear>();
 
-                    //gear.Init(data);
-
-                    GameManager.instance.gear.Init(data);
+                    gear.Init(data);
                 }
                 else
                 {
                     float nextRate = data.damages[level];
 
-                    //gear.LevelUp(nextRate);
-                    GameManager.instance.gear.LevelUp(nextRate);
+                    gear.LevelUp(nextRate);
                 }
 
                 level++;
+
                 break;
 
             case ItemData.ItemType.Heal:
-                GameManager.instance.health = GameManager.instance.maxHealth;
+                GameManager.instance.player.health = GameManager.instance.maxHealth;
                 break;
         }
+
+        GameManager.instance.player.statPoints--;
+
 
         if (level == data.damages.Length)
         {

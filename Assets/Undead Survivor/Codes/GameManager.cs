@@ -161,7 +161,12 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    void OnLevelChanged(int oldLevel, int newLevel) { }
+    void OnLevelChanged(int oldLevel, int newLevel)
+    {
+        //if (isServer)
+            GameManager.instance.player.statPoints++; // 레벨 증가만큼 스탯 포인트 지급
+    }
+
     void OnKillChanged(int oldKill, int newKill) { }
     void OnExpChanged(int oldExp, int newExp) { }
 
