@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : NetworkBehaviour
 {
@@ -33,18 +35,60 @@ public class GameManager : NetworkBehaviour
     public Player player;
     public List<Player> players = new List<Player>();
     //public LevelUp uiLevelUp;
-    //public Result uiResult;
-    //public GameObject enemyCleaner;
+    public Result uiResult;
+    public GameObject enemyCleaner;
 
     public Weapon weapon;   // 추가
+    public Gear gear;
 
-
-
-    // 추후 삭제
-    private void Start()
+    
+    public void GameStart()
     {
         health = maxHealth;
 
+        //uiLevelUp.select(0);
+        Resume();
+
+    }
+
+    
+    public void GameOver()
+    {
+        StartCoroutine(GameOverRoutine());
+    }
+
+    IEnumerator GameOverRoutine()
+    {
+        isLive = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        uiResult.gameObject.SetActive(true);
+        uiResult.Lose();
+        Stop();
+    }
+
+    
+    public void GameVictory()
+    {
+        StartCoroutine(GameVictoryRoutine());
+    }
+
+    IEnumerator GameVictoryRoutine()
+    {
+        isLive = false;
+        enemyCleaner.SetActive(true);
+
+        yield return new WaitForSeconds(0.5f);
+
+        uiResult.gameObject.SetActive(true);
+        uiResult.Win();
+        Stop();
+    }
+
+    public void GameRetry()
+    {
+        SceneManager.LoadScene(0);      // 추후 확인 요
     }
 
 
@@ -61,6 +105,8 @@ public class GameManager : NetworkBehaviour
         if (gameTime > maxGameTime)
         {
             gameTime = maxGameTime;
+
+            GameVictory();
         }
     }
 
@@ -73,6 +119,9 @@ public class GameManager : NetworkBehaviour
     [Server]
     public void AddExp()
     {
+        if (!isLive)
+            return;
+
         exp++;
 
         int requiredExp = nextExp[Mathf.Min(level, nextExp.Length - 1)];
@@ -83,6 +132,19 @@ public class GameManager : NetworkBehaviour
             level++;
         }
     }
+
+    public void Stop()
+    {
+        isLive = false;
+        Time.timeScale = 0;
+    }
+
+    public void Resume()
+    {
+        isLive = true;
+        Time.timeScale = 1;
+    }
+
 
     void OnLevelChanged(int oldLevel, int newLevel) { }
     void OnKillChanged(int oldKill, int newKill) { }
