@@ -4,7 +4,7 @@ using Mirror;
 public class Player : NetworkBehaviour
 {
     [Header("Health")]
-    [SyncVar(hook = nameof(OnHealthChanged))]
+    [SyncVar]
     public float health;
 
     public float maxHealth = 100;
@@ -19,7 +19,19 @@ public class Player : NetworkBehaviour
 
     Rigidbody2D rigid;
     SpriteRenderer spriter;
-    Animator anim;
+    public Animator anim;
+
+    public RuntimeAnimatorController[] animCon;
+
+    [SyncVar(hook = nameof(OnAnimControllerIndexChanged))]
+    public int animControllerIndex;
+
+    void Awake()
+    {
+        rigid = GetComponent<Rigidbody2D>();
+        spriter = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+    }
 
     public override void OnStartLocalPlayer()
     {
@@ -35,7 +47,7 @@ public class Player : NetworkBehaviour
     public override void OnStartServer()
     {
         GameManager.instance.RegisterPlayer(this);
-        health = maxHealth; // 서버에서 체력 초기화
+        health = maxHealth;
     }
 
     public override void OnStopServer()
@@ -51,34 +63,17 @@ public class Player : NetworkBehaviour
         }
     }
 
-    void Awake()
-    {
-        rigid = GetComponent<Rigidbody2D>();
-        spriter = GetComponent<SpriteRenderer>();
-        anim = GetComponent<Animator>();
-    }
-
     void Update()
     {
-        if (!isLocalPlayer)
-            return;
+        if (!isLocalPlayer) return;
 
         Vector2 currentInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
+        // 로컬에서만 방향 전환 감지
         if (currentInput != inputVec)
         {
-            CmdSetInputVec(currentInput);
-        }
-
-        bool currentFlipState = spriter.flipX;
-        if (currentInput.x != 0)
-        {
-            currentFlipState = currentInput.x < 0;
-        }
-
-        if (currentFlipState != isFlipped)
-        {
-            CmdSetFlipState(currentFlipState);
+            bool shouldFlip = currentInput.x < 0;
+            CmdSetMoveInput(currentInput, shouldFlip);
         }
     }
 
@@ -89,48 +84,31 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    void CmdSetInputVec(Vector2 newVec)
+    void CmdSetMoveInput(Vector2 moveInput, bool flip)
     {
-        inputVec = newVec;
+        inputVec = moveInput;
+        isFlipped = flip;
     }
 
-    [Command]
-    void CmdSetFlipState(bool newFlipState)
+    void OnInputVecChanged(Vector2 oldVec, Vector2 newVec)
     {
-        isFlipped = newFlipState;
+        anim.SetFloat("Speed", newVec.magnitude);
     }
 
-    void OnInputVecChanged(Vector2 oldInputVec, Vector2 newInputVec)
+    void OnFlipXChanged(bool oldFlip, bool newFlip)
     {
-        anim.SetFloat("Speed", newInputVec.magnitude);
+        spriter.flipX = newFlip;
     }
 
-    void OnFlipXChanged(bool oldFlipState, bool newFlipState)
+    void OnAnimControllerIndexChanged(int oldIndex, int newIndex)
     {
-        spriter.flipX = newFlipState;
+        anim.runtimeAnimatorController = animCon[newIndex];
     }
 
-    void OnHealthChanged(float oldValue, float newValue)
-    {
-        // 체력 UI 갱신, 사망 처리
-        if (newValue <= 0)
-        {
-            anim.SetTrigger("Dead");
-            if (isLocalPlayer)
-            {
-                Debug.Log("You Died!");
-                // GameOver UI 표시 등
-            }
-        }
-    }
-
-    [ServerCallback]
+    [Server]
     void OnCollisionStay2D(Collision2D collision)
     {
-        if (!GameManager.instance.isLive)
-            return;
-
-        if (health <= 0)
+        if (!GameManager.instance.isLive || health <= 0)
             return;
 
         health -= Time.deltaTime * 10f;
@@ -139,7 +117,6 @@ public class Player : NetworkBehaviour
         {
             health = 0;
             RpcDie();
-
         }
     }
 
@@ -147,7 +124,6 @@ public class Player : NetworkBehaviour
     void RpcDie()
     {
         anim.SetTrigger("Dead");
-        GameManager.instance.GameOver(); // 확인 요
-
+        GameManager.instance.GameOver();
     }
 }

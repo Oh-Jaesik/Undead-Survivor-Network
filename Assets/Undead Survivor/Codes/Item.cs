@@ -3,7 +3,7 @@ using Mirror.BouncyCastle.Asn1.X509;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Item : NetworkBehaviour
+public class Item : MonoBehaviour
 {
     public ItemData data;
     public int level;
@@ -67,16 +67,15 @@ public class Item : NetworkBehaviour
                 if (level == 0)
                 {
                     // 서버에서 무기 생성 및 Init
-
-
                     GameManager.instance.weapon.Init(data);
-
                     // 이 무기는 미리 생성되어 있어야 하며, NetworkServer.Spawn도 서버에서 호출되어야 함
+
+
+
                 }
                 else
                 {
                     // 서버에게 레벨업 요청
-
                     GameManager.instance.weapon.CmdLevelUp(
                         data.baseDamage + data.baseDamage * data.damages[level],
                         data.counts[level]);

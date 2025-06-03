@@ -31,7 +31,6 @@ public class Weapon : NetworkBehaviour
 
     void Update()
     {
-        
         if (!isServer) return;
 
         if (Input.GetButtonDown("Jump"))

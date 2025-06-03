@@ -42,16 +42,22 @@ public class GameManager : NetworkBehaviour
     public Gear gear;
 
     
-    public void GameStart()
+    public void GameStart(int id)
     {
+        //playerId = id;
         health = maxHealth;
+        player.gameObject.SetActive(true);
+
+        player.animControllerIndex = id;
+        //player.anim.runtimeAnimatorController = player.animCon[GameManager.instance.playerId]; // ?
+
+        enemyCleaner.SetActive(false);
 
         //uiLevelUp.select(0);
         Resume();
-
     }
 
-    
+   
     public void GameOver()
     {
         StartCoroutine(GameOverRoutine());
@@ -97,7 +103,7 @@ public class GameManager : NetworkBehaviour
         instance = this;
     }
 
-    [ServerCallback]
+    [Server]
     void Update()
     {
         if (!isLive)
@@ -109,8 +115,14 @@ public class GameManager : NetworkBehaviour
         {
             gameTime = maxGameTime;
 
-            GameVictory();
+            RpcVictory();
         }
+    }
+
+    [ClientRpc]
+    void RpcVictory()
+    {
+        GameVictory();
     }
 
     [Server]

@@ -177,9 +177,17 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  health: 0
+  maxHealth: 100
   inputVec: {x: 0, y: 0}
   isFlipped: 0
   speed: 3
+  anim: {fileID: 0}
+  animCon:
+  - {fileID: 9100000, guid: 49ae160bb44c0894d906532827726896, type: 2}
+  - {fileID: 22100000, guid: 075181be36eca43439b5e7118b09babc, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!95 &1831404935922481106
 Animator:
   serializedVersion: 7
@@ -318,6 +326,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a5f07f60945744c9e7e901096e247b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   type: 0
   rate: 0
 --- !u!1 &5083736351829722617
@@ -437,6 +448,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a5f07f60945744c9e7e901096e247b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   type: 0
   rate: 0
 --- !u!1 &5430272541965294423
