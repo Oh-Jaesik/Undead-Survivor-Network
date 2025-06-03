@@ -17,8 +17,8 @@ public class Spawner : NetworkBehaviour        // player 밑에 spawner 오브젝트 �
     [Server]
     void Update()
     {
-        //if (!GameManager.instance.isLive)
-        //    return;
+        if (!GameManager.instance.isLive)
+            return;
 
         timer += Time.deltaTime;        // 몬스터 스폰 쿨타임
         level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / 10f), spawnData.Length - 1);

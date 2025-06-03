@@ -100,6 +100,9 @@ public class GameManager : NetworkBehaviour
     [ServerCallback]
     void Update()
     {
+        if (!isLive)
+            return;
+
         gameTime += Time.deltaTime;
 
         if (gameTime > maxGameTime)

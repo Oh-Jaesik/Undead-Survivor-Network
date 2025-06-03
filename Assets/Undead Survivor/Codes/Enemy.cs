@@ -50,13 +50,20 @@ public class Enemy : NetworkBehaviour
             spriter.sortingOrder = 2;
             anim.SetBool("Dead", false);
             health = maxHealth;
-            StartCoroutine(FindTargetWithDelay(0.7f));
         }
+
+        //if (isServer)
+        //{
+        //    Player nearestPlayer = GameManager.instance.GetNearestPlayer(transform.position); // 가장 가까운 플레이어
+        //    if (nearestPlayer != null)
+        //        target = nearestPlayer.GetComponent<Rigidbody2D>();
+        //}
     }
 
-    IEnumerator FindTargetWithDelay(float delay)
+    void FixedUpdate()
     {
-        yield return new WaitForSeconds(delay);
+        if (!isServer || !isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+            return;
 
         if (isServer)
         {
@@ -64,12 +71,7 @@ public class Enemy : NetworkBehaviour
             if (nearestPlayer != null)
                 target = nearestPlayer.GetComponent<Rigidbody2D>();
         }
-    }
 
-    void FixedUpdate()
-    {
-        if (!isServer || !isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
-            return;
 
         if (target != null)
         {

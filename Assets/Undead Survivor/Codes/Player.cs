@@ -140,7 +140,6 @@ public class Player : NetworkBehaviour
             health = 0;
             RpcDie();
 
-            
         }
     }
 
@@ -149,5 +148,6 @@ public class Player : NetworkBehaviour
     {
         anim.SetTrigger("Dead");
         GameManager.instance.GameOver(); // »Æ¿Œ ø‰
+
     }
 }
