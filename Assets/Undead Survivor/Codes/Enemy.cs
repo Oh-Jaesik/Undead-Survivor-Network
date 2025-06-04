@@ -131,11 +131,13 @@ public class Enemy : NetworkBehaviour
         if (!isServer) return;
 
         health -= collision.GetComponent<Bullet>().damage;
+        Transform player = collision.GetComponent<Bullet>().followTarget.parent;
         StartCoroutine(KnockBack());
 
         if (health > 0)
         {
             RpcPlayHitAnim();
+            player.GetComponent<AttackTracker>()?.RegisterHit();
         }
         else
         {

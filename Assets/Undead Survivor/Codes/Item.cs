@@ -39,22 +39,22 @@ public class Item : MonoBehaviour
         textLevel.text = "Lv. " + (level + 1);
 
 
-        switch (data.itemType)
-        {
-            case ItemData.ItemType.Melee:
-            case ItemData.ItemType.Range:
-                textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
-                break;
+        //switch (data.itemType)
+        //{
+        //    case ItemData.ItemType.Melee:
+        //    case ItemData.ItemType.Range:
+        //        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
+        //        break;
 
-            case ItemData.ItemType.Glove:
-            case ItemData.ItemType.Shoe:
-                textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
-                break;
+        //    case ItemData.ItemType.Glove:
+        //    case ItemData.ItemType.Shoe:
+        //        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
+        //        break;
 
-            default:
-                textDesc.text = string.Format(data.itemDesc);
-                break;
-        }
+        //    default:
+        //        textDesc.text = string.Format(data.itemDesc);
+        //        break;
+        //}
     }
 
     public void OnClick()

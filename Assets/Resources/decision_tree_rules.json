@@ -1,0 +1,213 @@
+{
+  "feature": "hit_count",
+  "threshold": 55.0,
+  "left": {
+    "feature": "hit_count",
+    "threshold": 25.0,
+    "left": {
+      "class": "회피형"
+    },
+    "right": {
+      "feature": "total_movement",
+      "threshold": 191.0,
+      "left": {
+        "feature": "total_movement",
+        "threshold": 150.9000015258789,
+        "left": {
+          "class": "공격형"
+        },
+        "right": {
+          "feature": "hit_count",
+          "threshold": 33.0,
+          "left": {
+            "feature": "total_movement",
+            "threshold": 156.1500015258789,
+            "left": {
+              "class": "회피형"
+            },
+            "right": {
+              "class": "공격형"
+            }
+          },
+          "right": {
+            "feature": "play_time",
+            "threshold": 82.5,
+            "left": {
+              "class": "회피형"
+            },
+            "right": {
+              "feature": "hit_count",
+              "threshold": 48.0,
+              "left": {
+                "feature": "total_movement",
+                "threshold": 160.9000015258789,
+                "left": {
+                  "class": "공격형"
+                },
+                "right": {
+                  "feature": "play_time",
+                  "threshold": 112.5,
+                  "left": {
+                    "class": "회피형"
+                  },
+                  "right": {
+                    "feature": "avg_distance",
+                    "threshold": 5.615000009536743,
+                    "left": {
+                      "class": "공격형"
+                    },
+                    "right": {
+                      "class": "회피형"
+                    }
+                  }
+                }
+              },
+              "right": {
+                "class": "회피형"
+              }
+            }
+          }
+        }
+      },
+      "right": {
+        "feature": "total_movement",
+        "threshold": 195.9499969482422,
+        "left": {
+          "class": "공격형"
+        },
+        "right": {
+          "feature": "hit_count",
+          "threshold": 46.5,
+          "left": {
+            "feature": "total_movement",
+            "threshold": 279.15000915527344,
+            "left": {
+              "feature": "hit_count",
+              "threshold": 30.5,
+              "left": {
+                "class": "공격형"
+              },
+              "right": {
+                "feature": "hit_count",
+                "threshold": 45.5,
+                "left": {
+                  "feature": "total_movement",
+                  "threshold": 203.1500015258789,
+                  "left": {
+                    "feature": "avg_distance",
+                    "threshold": 4.684999942779541,
+                    "left": {
+                      "class": "공격형"
+                    },
+                    "right": {
+                      "class": "회피형"
+                    }
+                  },
+                  "right": {
+                    "feature": "hit_count",
+                    "threshold": 36.5,
+                    "left": {
+                      "class": "회피형"
+                    },
+                    "right": {
+                      "class": "공격형"
+                    }
+                  }
+                },
+                "right": {
+                  "class": "회피형"
+                }
+              }
+            },
+            "right": {
+              "feature": "total_movement",
+              "threshold": 290.09999084472656,
+              "left": {
+                "class": "회피형"
+              },
+              "right": {
+                "feature": "hit_count",
+                "threshold": 37.0,
+                "left": {
+                  "feature": "play_time",
+                  "threshold": 82.5,
+                  "left": {
+                    "class": "공격형"
+                  },
+                  "right": {
+                    "feature": "avg_distance",
+                    "threshold": 5.849999904632568,
+                    "left": {
+                      "class": "회피형"
+                    },
+                    "right": {
+                      "class": "공격형"
+                    }
+                  }
+                },
+                "right": {
+                  "class": "회피형"
+                }
+              }
+            }
+          },
+          "right": {
+            "feature": "avg_distance",
+            "threshold": 5.3500001430511475,
+            "left": {
+              "feature": "hit_count",
+              "threshold": 48.5,
+              "left": {
+                "class": "공격형"
+              },
+              "right": {
+                "feature": "hit_count",
+                "threshold": 49.5,
+                "left": {
+                  "class": "회피형"
+                },
+                "right": {
+                  "class": "공격형"
+                }
+              }
+            },
+            "right": {
+              "feature": "hit_count",
+              "threshold": 47.5,
+              "left": {
+                "class": "회피형"
+              },
+              "right": {
+                "feature": "play_time",
+                "threshold": 97.5,
+                "left": {
+                  "feature": "avg_distance",
+                  "threshold": 5.5899999141693115,
+                  "left": {
+                    "class": "회피형"
+                  },
+                  "right": {
+                    "feature": "total_movement",
+                    "threshold": 245.6500015258789,
+                    "left": {
+                      "class": "공격형"
+                    },
+                    "right": {
+                      "class": "공격형"
+                    }
+                  }
+                },
+                "right": {
+                  "class": "공격형"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "right": {
+    "class": "공격형"
+  }
+}
