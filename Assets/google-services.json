@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "84292583581",
+    "project_id": "undeadsurvivor-77af8",
+    "storage_bucket": "undeadsurvivor-77af8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84292583581:android:f1b97d13c3b7c985e81474",
+        "android_client_info": {
+          "package_name": "com.mycompany.undeadsurvivor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdn21Ya3qA1FigE6kNU2EKZzm47pQjzvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

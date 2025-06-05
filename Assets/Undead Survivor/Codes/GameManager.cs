@@ -71,6 +71,15 @@ public class GameManager : NetworkBehaviour
 
         uiResult.gameObject.SetActive(true);
         uiResult.Lose();
+        Debug.Log("?? FirebaseManager.Instance: " + (FirebaseManager.Instance != null));
+        Debug.Log("?? FirebaseManager.dbRef: " + (FirebaseManager.Instance?.dbRef != null));
+
+        yield return new WaitUntil(() =>
+        {
+            return FirebaseManager.Instance != null && FirebaseManager.Instance.dbRef != null;
+        });//firebase 초기화
+
+        FirebaseManager.Instance.SaveUserData();//데이터 저장
         Stop();
     }
 
@@ -89,7 +98,13 @@ public class GameManager : NetworkBehaviour
 
         uiResult.gameObject.SetActive(true);
         uiResult.Win();
-        Stop();
+        yield return new WaitUntil(() =>
+           FirebaseManager.Instance != null &&
+           FirebaseManager.Instance.dbRef != null
+       );//firebase 초기화
+
+        FirebaseManager.Instance.SaveUserData();
+        Stop();//데이터 저장
     }
 
     public void GameRetry()
