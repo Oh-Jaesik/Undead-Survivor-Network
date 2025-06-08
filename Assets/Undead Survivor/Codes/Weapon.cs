@@ -9,7 +9,7 @@ public class Weapon : NetworkBehaviour
     public float speed;
 
     float timer;
-    Player player;
+    public Player player;
 
     [SyncVar(hook = nameof(OnDamageChanged))]
     public float damage;
@@ -17,30 +17,39 @@ public class Weapon : NetworkBehaviour
     [SyncVar(hook = nameof(OnCountChanged))]
     public int count;
 
-    void Awake()
-    {
-        player = GameManager.instance.player;
-    }
-
     public override void OnStartLocalPlayer()
     {
-        GameManager.instance.weapon = this;
+        player = GameManager.instance.player;
 
+        if (id == 0)
+            GameManager.instance.weapon = this;
+        if (id == 1)
+            GameManager.instance.weapon1 = this;
     }
-
 
     void Update()
     {
         if (!isServer) return;
 
-        if (Input.GetButtonDown("Jump"))
-        {
-            CmdLevelUp(20, 5);
-        }
+        if (!GameManager.instance.isLive)
+            return;
 
-        if (id == 0)
+        switch (id)
         {
-            transform.Rotate(Vector3.back * speed * Time.deltaTime);
+            case 0:
+                transform.Rotate(Vector3.back * speed * Time.deltaTime);
+                break;
+
+            default:
+                timer += Time.deltaTime;
+
+                if (timer > speed)
+                {
+                    timer = 0f;
+                    Fire();
+                }
+
+                break;
         }
     }
 
@@ -112,7 +121,7 @@ public class Weapon : NetworkBehaviour
         }
     }
 
-   
+
     void OnDamageChanged(float oldValue, float newValue)
     {
         damage = newValue;
@@ -123,7 +132,7 @@ public class Weapon : NetworkBehaviour
         count = newValue;
     }
 
-    
+
     [Server]
     void Batch()
     {
@@ -141,5 +150,28 @@ public class Weapon : NetworkBehaviour
 
             bullet.Init(damage, -1, Vector3.zero);
         }
+    }
+
+    [Server]
+    void Fire()
+    {
+        if (!player.scanner.nearestTarget)
+            return;
+
+        Vector3 targetPos = player.scanner.nearestTarget.position;
+        Vector3 dir = targetPos - transform.position;
+        dir = dir.normalized;
+
+        GameObject bulletObj = GameManager.instance.pool.Get(prefabId, transform.position, Quaternion.identity);
+        Bullet bullet = bulletObj.GetComponent<Bullet>();
+
+        bullet.transform.position = transform.position;
+        bullet.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);       // 총알의 로컬기준 위방향을 dir로 설정
+
+
+        bullet.followTarget = transform;
+
+
+        bullet.GetComponent<Bullet>().Init(damage, count, dir);
     }
 }

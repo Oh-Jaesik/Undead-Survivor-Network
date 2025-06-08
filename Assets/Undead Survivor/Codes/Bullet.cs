@@ -22,7 +22,6 @@ public class Bullet : NetworkBehaviour
         if (per == -1 && followTarget != null)
         {
             transform.position = followTarget.position + followTarget.rotation * offset;
-            //transform.rotation = followTarget.rotation;
         }
     }
 
@@ -35,6 +34,21 @@ public class Bullet : NetworkBehaviour
         if (per > -1)
         {
             rigid.linearVelocity = dir * 15f;
+        }
+    }
+
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!collision.CompareTag("Enemy") || per == -1)
+            return;
+
+        per--;
+
+        if (per == -1)
+        {
+            rigid.linearVelocity = Vector2.zero;
+            gameObject.SetActive(false);
         }
     }
 }

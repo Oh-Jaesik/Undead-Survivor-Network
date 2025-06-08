@@ -66,7 +66,7 @@ public class Item : MonoBehaviour
         switch (data.itemType)
         {
             case ItemData.ItemType.Melee:
-            case ItemData.ItemType.Range:
+            
 
                 if (level == 0)
                 {
@@ -90,6 +90,27 @@ public class Item : MonoBehaviour
                 break;
 
 
+            case ItemData.ItemType.Range:
+                if (level == 0)
+                {
+                    // 서버에서 무기 생성 및 Init
+                    GameManager.instance.weapon1.Init(data);
+                    // 이 무기는 미리 생성되어 있어야 하며, NetworkServer.Spawn도 서버에서 호출되어야 함
+
+
+
+                }
+                else
+                {
+                    // 서버에게 레벨업 요청
+                    GameManager.instance.weapon1.CmdLevelUp(
+                        data.baseDamage + data.baseDamage * data.damages[level],
+                        data.counts[level]);
+
+                }
+
+                level++;
+                break;
 
             case ItemData.ItemType.Glove:
             case ItemData.ItemType.Shoe:

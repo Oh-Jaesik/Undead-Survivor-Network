@@ -16,6 +16,7 @@ public class Player : NetworkBehaviour
     public bool isFlipped;
 
     public float speed;
+    public Scanner scanner;
 
     Rigidbody2D rigid;
     SpriteRenderer spriter;
@@ -35,6 +36,7 @@ public class Player : NetworkBehaviour
         rigid = GetComponent<Rigidbody2D>();
         spriter = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        scanner = GetComponent<Scanner>();
     }
 
     public override void OnStartLocalPlayer()

@@ -39,6 +39,7 @@ public class GameManager : NetworkBehaviour
     public GameObject enemyCleaner;
 
     public Weapon weapon;   // 추가
+    public Weapon weapon1;   // 추가
     public Gear gear;
 
     

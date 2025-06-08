@@ -16,7 +16,7 @@ public class Enemy : NetworkBehaviour
     public bool isLive;
 
     [SyncVar(hook = nameof(OnDeadStateChanged))]
-    public bool isDead;
+    public bool isDead; // 삭제 가능?
 
     public RuntimeAnimatorController[] animCon;
     public Rigidbody2D target;
