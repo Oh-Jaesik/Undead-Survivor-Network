@@ -11,6 +11,10 @@ public class Bullet : NetworkBehaviour
 
     Rigidbody2D rigid;
 
+
+    public Weapon ownerWeapon;
+
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();

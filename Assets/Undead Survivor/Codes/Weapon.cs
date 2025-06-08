@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using Mirror;
 using Unity.VisualScripting;
+using System;
+using UnityEngine.UIElements;
 
 public class Weapon : NetworkBehaviour
 {
@@ -16,6 +18,7 @@ public class Weapon : NetworkBehaviour
 
     [SyncVar(hook = nameof(OnCountChanged))]
     public int count;
+
 
     public override void OnStartLocalPlayer()
     {
@@ -41,17 +44,17 @@ public class Weapon : NetworkBehaviour
                 transform.Rotate(Vector3.back * speed * Time.deltaTime);
                 break;
 
-            default:
-                timer += Time.deltaTime;
+            //default:
+            //    timer += Time.deltaTime;
 
-                if (timer > speed)
-                {
-                    timer = 0f;
+            //    if (timer > speed)
+            //    {
+            //        timer = 0f;
 
-                    Fire();
-                }
+            //        Fire();
+            //    }
 
-                break;
+            //    break;
         }
     }
 
@@ -90,7 +93,7 @@ public class Weapon : NetworkBehaviour
                 Batch();
                 break;
             default:
-                speed = 0.3f;
+                speed = 1f;
                 break;
         }
     }
@@ -112,7 +115,6 @@ public class Weapon : NetworkBehaviour
     //    }
     //}
 
-    // === 서버에서만 실행 ===
     [Command]
     public void CmdLevelUp(float newDamage, int addCount)
     {
@@ -140,15 +142,33 @@ public class Weapon : NetworkBehaviour
     [Server]
     void Batch()
     {
+        //기존 Bullet 0 제거
+        foreach (var bullet in FindObjectsOfType<Bullet>())
+        {
+            if (bullet.ownerWeapon == this && bullet.name.StartsWith("Bullet 0")) // 이름이 "Bullet 0"으로 시작하는 것만 삭제
+            {
+                NetworkServer.UnSpawn(bullet.gameObject);
+                Destroy(bullet.gameObject);
+            }
+        }
+
+
         for (int i = 0; i < count; i++)
         {
             float angle = 360f * i / count;
             Quaternion rot = Quaternion.Euler(0f, 0f, angle);
             Vector3 offset = rot * Vector3.up * 1.5f;
 
-            GameObject bulletObj = GameManager.instance.pool.Get(prefabId, transform.position, Quaternion.identity);
+            //GameObject bulletObj = GameManager.instance.pool.Get(prefabId, transform.position, Quaternion.identity);
+
+            Debug.Log("hello!");
+            GameObject bulletObj = Instantiate(GameManager.instance.pool.prefabs[prefabId], transform.position, Quaternion.identity);
+            NetworkServer.Spawn(bulletObj);
+
+
             Bullet bullet = bulletObj.GetComponent<Bullet>();
 
+            bullet.ownerWeapon = this;      // bullet 주인 누구인지
             bullet.followTarget = transform;
             bullet.offset = offset;
 
@@ -157,26 +177,26 @@ public class Weapon : NetworkBehaviour
     }
 
 
-    [Server]
-    public void Fire()
-    {
-        if (!player.scanner.nearestTarget)
-            return;
+    //[Server]
+    //public void Fire()
+    //{
+    //    if (!player.scanner.nearestTarget)
+    //        return;
 
-        Vector3 targetPos = player.scanner.nearestTarget.position;
-        Vector3 dir = targetPos - transform.position;
-        dir = dir.normalized;
+    //    Vector3 targetPos = player.scanner.nearestTarget.position;
+    //    Vector3 dir = targetPos - transform.position;
+    //    dir = dir.normalized;
 
-        GameObject bulletObj = GameManager.instance.pool.Get(prefabId, transform.position, Quaternion.identity);
-        Bullet bullet = bulletObj.GetComponent<Bullet>();
+    //    GameObject bulletObj = GameManager.instance.pool.Get(prefabId, transform.position, Quaternion.identity);
+    //    Bullet bullet = bulletObj.GetComponent<Bullet>();
 
-        bullet.transform.position = transform.position;
-        bullet.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);       // 총알의 로컬기준 위방향을 dir로 설정
-
-
-        bullet.followTarget = transform;
+    //    bullet.transform.position = transform.position;
+    //    bullet.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);       // 총알의 로컬기준 위방향을 dir로 설정
 
 
-        bullet.GetComponent<Bullet>().Init(damage, count, dir);
-    }
+    //    bullet.followTarget = transform;
+
+
+    //    bullet.GetComponent<Bullet>().Init(damage, count, dir);
+    //}
 }

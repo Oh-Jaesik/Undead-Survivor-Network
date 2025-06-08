@@ -1,7 +1,7 @@
 using UnityEngine;
 using Mirror;
 
-public class Spawner : NetworkBehaviour        // player 밑에 spawner 오브젝트 붙어있음. 그밑에 spawn point 오브젝트 붙어있음.
+public class Spawner : NetworkBehaviour
 {
     public Transform[] spawnPoint;
     public SpawnData[] spawnData;

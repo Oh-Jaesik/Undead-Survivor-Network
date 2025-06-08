@@ -17,7 +17,7 @@ MonoBehaviour:
   itemName: "\uC0BD"
   itemDesc: 
   itemIcon: {fileID: -181907988, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  baseDamage: 4.5
+  baseDamage: 5
   baseCount: 3
   damages:
   - 0.5
@@ -25,5 +25,5 @@ MonoBehaviour:
   - 1.5
   - 2
   - 3
-  counts: 0100000001000000010000000100000002000000
+  counts: 0100000001000000010000000100000001000000
   projectile: {fileID: 8021207149015494698, guid: 33e5a36def0ef5a499ff80faac634e0e, type: 3}

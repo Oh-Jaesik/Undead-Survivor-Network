@@ -3,17 +3,12 @@ using Mirror;
 
 public class Player : NetworkBehaviour
 {
-    [Header("Health")]
     [SyncVar]
     public float health;
-
     public float maxHealth = 100;
 
     [SyncVar(hook = nameof(OnInputVecChanged))]
     public Vector2 inputVec;
-
-    [SyncVar(hook = nameof(OnFlipXChanged))]
-    public bool isFlipped;
 
     public float speed;
     public Scanner scanner;
@@ -29,6 +24,7 @@ public class Player : NetworkBehaviour
 
     public int statPoints;
 
+    float timer; // 실험용
 
 
     void Awake()
@@ -71,39 +67,49 @@ public class Player : NetworkBehaviour
 
     void Update()
     {
-        if (!isLocalPlayer) return;
+        if (!isLocalPlayer)
+            return;
 
-        Vector2 currentInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        if (!GameManager.instance.isLive)
+            return;
 
-        // 로컬에서만 방향 전환 감지
-        if (currentInput != inputVec)
+        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        CmdSetInputVec(moveInput);
+
+
+
+        timer += Time.deltaTime;
+
+        if (timer > GameManager.instance.weapon1.speed)
         {
-            bool shouldFlip = currentInput.x < 0;
-            CmdSetMoveInput(currentInput, shouldFlip);
+            timer = 0f;
+
+            CmdFire();
         }
+    }
+
+    [Command]
+    void CmdSetInputVec(Vector2 moveInput)
+    {
+        inputVec = moveInput;
     }
 
     void FixedUpdate()
     {
+        if (!GameManager.instance.isLive)
+            return;
+
         Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
         rigid.MovePosition(rigid.position + nextVec);
     }
 
-    [Command]
-    void CmdSetMoveInput(Vector2 moveInput, bool flip)
-    {
-        inputVec = moveInput;
-        isFlipped = flip;
-    }
 
     void OnInputVecChanged(Vector2 oldVec, Vector2 newVec)
     {
         anim.SetFloat("Speed", newVec.magnitude);
-    }
 
-    void OnFlipXChanged(bool oldFlip, bool newFlip)
-    {
-        spriter.flipX = newFlip;
+        if (newVec.x != 0)
+            spriter.flipX = newVec.x < 0;
     }
 
     void OnAnimControllerIndexChanged(int oldIndex, int newIndex)
@@ -132,4 +138,29 @@ public class Player : NetworkBehaviour
         anim.SetTrigger("Dead");
         GameManager.instance.GameOver();
     }
+
+    [Command]
+    void CmdFire()
+    {
+        if (!scanner.nearestTarget)
+            return;
+
+        Vector3 targetPos = scanner.nearestTarget.position;
+        Vector3 dir = targetPos - transform.position;
+        dir = dir.normalized;
+
+        GameObject bulletObj = GameManager.instance.pool.Get(2, transform.position, Quaternion.identity);
+        Bullet bullet = bulletObj.GetComponent<Bullet>();
+
+        bullet.transform.position = transform.position;
+        bullet.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);       // 총알의 로컬기준 위방향을 dir로 설정
+
+
+        bullet.followTarget = transform;
+
+
+        bullet.GetComponent<Bullet>().Init(GameManager.instance.weapon1.damage, GameManager.instance.weapon1.count, dir);
+    }
+
+
 }

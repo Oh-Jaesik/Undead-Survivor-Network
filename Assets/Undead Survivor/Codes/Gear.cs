@@ -48,12 +48,13 @@ public class Gear : MonoBehaviour
             switch (weapon.id)
             {
                 case 0:
-                    float speed = 150 ;
+                    float speed = 150f;
                     weapon.speed = speed + speed * rate;
                     break;
+
                 default:
-                    speed = 0.5f ;
-                    weapon.speed = speed * (1f - rate);
+                    speed = 1f;
+                    weapon.speed = speed * (1.1f - rate);     // 확인용 코드 수정
                     break;
             }
         }
