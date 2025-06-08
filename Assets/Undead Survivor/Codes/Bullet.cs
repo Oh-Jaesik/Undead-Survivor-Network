@@ -48,7 +48,8 @@ public class Bullet : NetworkBehaviour
         if (per == -1)
         {
             rigid.linearVelocity = Vector2.zero;
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
+            GameManager.instance.pool.ReturnToPool(gameObject);     // network unspawn
         }
     }
 }

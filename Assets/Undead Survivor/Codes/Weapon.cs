@@ -29,7 +29,8 @@ public class Weapon : NetworkBehaviour
 
     void Update()
     {
-        if (!isServer) return;
+        if (!isServer)
+            return;
 
         if (!GameManager.instance.isLive)
             return;
@@ -46,12 +47,15 @@ public class Weapon : NetworkBehaviour
                 if (timer > speed)
                 {
                     timer = 0f;
+
                     Fire();
                 }
 
                 break;
         }
     }
+
+
 
     [Server]
     public void Init(ItemData data)
@@ -91,22 +95,22 @@ public class Weapon : NetworkBehaviour
         }
     }
 
-    [Server]
-    public void Init()
-    {
+    //[Server]
+    //public void Init()
+    //{
 
 
-        switch (id)
-        {
-            case 0:
-                speed = 150;
-                Batch();
-                break;
-            default:
-                speed = 0.3f;
-                break;
-        }
-    }
+    //    switch (id)
+    //    {
+    //        case 0:
+    //            speed = 150;
+    //            Batch();
+    //            break;
+    //        default:
+    //            speed = 0.3f;
+    //            break;
+    //    }
+    //}
 
     // === 서버에서만 실행 ===
     [Command]
@@ -152,8 +156,9 @@ public class Weapon : NetworkBehaviour
         }
     }
 
+
     [Server]
-    void Fire()
+    public void Fire()
     {
         if (!player.scanner.nearestTarget)
             return;

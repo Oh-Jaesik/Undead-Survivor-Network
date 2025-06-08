@@ -675,6 +675,7 @@ MonoBehaviour:
   id: 0
   prefabId: 1
   speed: -150
+  player: {fileID: 0}
   damage: 10
   count: 3
 --- !u!1 &6393413395486268502
@@ -726,6 +727,7 @@ MonoBehaviour:
   syncInterval: 0
   id: 1
   prefabId: 2
-  speed: 0.2
-  damage: 3
+  speed: 1
+  player: {fileID: 0}
+  damage: 5
   count: 0
