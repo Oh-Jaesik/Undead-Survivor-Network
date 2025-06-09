@@ -1,5 +1,6 @@
 using UnityEngine;
 using Mirror;
+using System;
 
 public class Player : NetworkBehaviour
 {
@@ -25,6 +26,12 @@ public class Player : NetworkBehaviour
     public int statPoints;
 
     float timer; // ½ÇÇè¿ë
+
+
+    void OnAnimControllerIndexChanged(int oldIndex, int newIndex)
+    {
+        anim.runtimeAnimatorController = animCon[newIndex];
+    }
 
 
     void Awake()
@@ -83,10 +90,23 @@ public class Player : NetworkBehaviour
         if (timer > GameManager.instance.weapon1.speed)
         {
             timer = 0f;
-
             CmdFire();
         }
+
+
+        CmdChangeAnimController(animControllerIndex);
+        anim.runtimeAnimatorController = animCon[animControllerIndex];
     }
+
+    [Command]
+    void CmdChangeAnimController(int index)
+    {
+        if (index >= 0 && index < animCon.Length)
+        {
+            anim.runtimeAnimatorController = animCon[index];
+        }
+    }
+
 
     [Command]
     void CmdSetInputVec(Vector2 moveInput)
@@ -112,10 +132,7 @@ public class Player : NetworkBehaviour
             spriter.flipX = newVec.x < 0;
     }
 
-    void OnAnimControllerIndexChanged(int oldIndex, int newIndex)
-    {
-        anim.runtimeAnimatorController = animCon[newIndex];
-    }
+
 
     [Server]
     void OnCollisionStay2D(Collision2D collision)

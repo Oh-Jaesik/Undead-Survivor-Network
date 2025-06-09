@@ -22,10 +22,10 @@ public class GameManager : NetworkBehaviour
     [SyncVar(hook = nameof(OnLevelChanged))]
     public int level;
 
-    [SyncVar(hook = nameof(OnKillChanged))]
+    [SyncVar]
     public int kill;
 
-    [SyncVar(hook = nameof(OnExpChanged))]
+    [SyncVar]
     public int exp;
 
     public int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
@@ -40,23 +40,22 @@ public class GameManager : NetworkBehaviour
 
     public Weapon weapon;   // √ﬂ∞°
     public Weapon weapon1;   // √ﬂ∞°
-    public Gear gear;
+    //public Gear gear;
 
-
+    
     public void GameStart(int id)
     {
+        Debug.Log("hello");
         //playerId = id;
         health = maxHealth;
         player.gameObject.SetActive(true);
 
         player.animControllerIndex = id;
-        //player.anim.runtimeAnimatorController = player.animCon[GameManager.instance.playerId]; // ?
 
         enemyCleaner.SetActive(false);
 
         Resume();
     }
-
 
     public void GameOver()
     {
@@ -186,8 +185,6 @@ public class GameManager : NetworkBehaviour
         GameManager.instance.player.statPoints++; // ∑π∫ß ¡ı∞°∏∏≈≠ Ω∫≈» »πµÊ
     }
 
-    void OnKillChanged(int oldKill, int newKill) { }
-    void OnExpChanged(int oldExp, int newExp) { }
 
     [Server]
     public void RegisterPlayer(Player player)
