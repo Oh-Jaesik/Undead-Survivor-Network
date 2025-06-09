@@ -8,7 +8,14 @@ public class Weapon : NetworkBehaviour
 {
     public int id;
     public int prefabId;
+    [SyncVar(hook = nameof(OnSpeedChanged))]
     public float speed;
+
+    void OnSpeedChanged(float oldValue, float newValue)
+    {
+        speed = newValue;
+    }
+
 
     float timer;
     public Player player;
@@ -59,8 +66,6 @@ public class Weapon : NetworkBehaviour
     }
 
 
-
-    [Server]
     public void Init(ItemData data)
     {
         //if (!isServer)

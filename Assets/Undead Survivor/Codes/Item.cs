@@ -30,32 +30,32 @@ public class Item : MonoBehaviour
 
     void LateUpdate()
     {
-        textLevel.text = "Lv. " + (level + 1);
+        textLevel.text = "Lv. " + level;
     }
 
 
-    void OnEnable()
-    {
-        textLevel.text = "Lv. " + (level + 1);
+    //void OnEnable()
+    //{
+    //    textLevel.text = "Lv. " + (level + 1);
 
 
-        //switch (data.itemType)
-        //{
-        //    case ItemData.ItemType.Melee:
-        //    case ItemData.ItemType.Range:
-        //        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
-        //        break;
+    //    //switch (data.itemType)
+    //    //{
+    //    //    case ItemData.ItemType.Melee:
+    //    //    case ItemData.ItemType.Range:
+    //    //        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
+    //    //        break;
 
-        //    case ItemData.ItemType.Glove:
-        //    case ItemData.ItemType.Shoe:
-        //        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
-        //        break;
+    //    //    case ItemData.ItemType.Glove:
+    //    //    case ItemData.ItemType.Shoe:
+    //    //        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
+    //    //        break;
 
-        //    default:
-        //        textDesc.text = string.Format(data.itemDesc);
-        //        break;
-        //}
-    }
+    //    //    default:
+    //    //        textDesc.text = string.Format(data.itemDesc);
+    //    //        break;
+    //    //}
+    //}
 
     public void OnClick()
     {
@@ -66,7 +66,7 @@ public class Item : MonoBehaviour
         switch (data.itemType)
         {
             case ItemData.ItemType.Melee:
-            
+
 
                 if (level == 0)
                 {
@@ -97,15 +97,16 @@ public class Item : MonoBehaviour
                     GameManager.instance.weapon1.Init(data);
                     // 이 무기는 미리 생성되어 있어야 하며, NetworkServer.Spawn도 서버에서 호출되어야 함
 
+                    //GameManager.instance.weapon1.speed /= 1000;
 
 
                 }
                 else
                 {
                     // 서버에게 레벨업 요청
-                    GameManager.instance.weapon1.CmdLevelUp(
-                        data.baseDamage + data.baseDamage * data.damages[level],
-                        data.counts[level]);
+                    GameManager.instance.weapon1.CmdLevelUp(data.baseDamage + data.baseDamage * data.damages[level], data.counts[level]);
+
+                    //GameManager.instance.weapon1.speed /= 2;
 
                 }
 

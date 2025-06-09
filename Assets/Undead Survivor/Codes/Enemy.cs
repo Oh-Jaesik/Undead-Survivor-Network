@@ -132,16 +132,12 @@ public class Enemy : NetworkBehaviour
             isLive = false;
             coll.enabled = false;
             rigid.simulated = false;
+            spriter.sortingOrder = 1;
 
             RpcPlayDeadAnim();
             anim.SetBool("Dead", true);
 
-            coll.enabled = false;
-            rigid.simulated = false;
-            spriter.sortingOrder = 1;
-
             StartCoroutine(DelayedDead());
-
 
             GameManager.instance.AddKill();
             GameManager.instance.AddExp();

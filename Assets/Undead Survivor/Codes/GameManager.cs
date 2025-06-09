@@ -9,6 +9,7 @@ public class GameManager : NetworkBehaviour
     public static GameManager instance;
 
     [Header("# Game Control")]
+    [SyncVar]
     public bool isLive;        // SyncVar 없이, 로컬 플레이어 상태로만 사용
     [SyncVar]
     public float gameTime;

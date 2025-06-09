@@ -9,6 +9,14 @@ public class HUD : MonoBehaviour
     Text myText;
     Slider mySlider;
 
+    public GameObject targetObject;     // 토글용 오브젝트
+
+    public void ToggleActive()      // 토글 함수 (UI 껐다 켰다)
+    {
+        if (targetObject != null)
+            targetObject.SetActive(!targetObject.activeSelf);
+    }
+
     void Awake()
     {
         myText = GetComponent<Text>();
@@ -30,7 +38,7 @@ public class HUD : MonoBehaviour
                 break;
 
             case InfoType.Stat:
-                myText.text = string.Format("{0:F0} SP", GameManager.instance.player.statPoints);
+                myText.text = string.Format("{0:F0}P", GameManager.instance.player.statPoints);
                 break;
 
             case InfoType.Kill:
