@@ -48,13 +48,6 @@ public class Enemy : NetworkBehaviour
             anim.SetBool("Dead", false);
             health = maxHealth;
         }
-
-        //if (isServer)
-        //{
-        //    Player nearestPlayer = GameManager.instance.GetNearestPlayer(transform.position); // 가장 가까운 플레이어
-        //    if (nearestPlayer != null)
-        //        target = nearestPlayer.GetComponent<Rigidbody2D>();
-        //}
     }
 
     void FixedUpdate()
@@ -99,8 +92,6 @@ public class Enemy : NetworkBehaviour
     }
 
 
-
-
     [Server]
     public void Init(SpawnData data)
     {
@@ -120,7 +111,7 @@ public class Enemy : NetworkBehaviour
 
         health -= collision.GetComponent<Bullet>().damage;
         Transform player = collision.GetComponent<Bullet>().followTarget.parent;
-        StartCoroutine(KnockBack());
+        //StartCoroutine(KnockBack());      // 넉백 기능 삭제 (동기화 지연 사유)
 
         if (health > 0)
         {

@@ -41,7 +41,8 @@ public class GameManager : NetworkBehaviour
 
     public Weapon weapon;   // 추가
     public Weapon weapon1;   // 추가
-    //public Gear gear;
+    public Gear gear0;
+    public Gear gear1;
 
     
     public void GameStart(int id)

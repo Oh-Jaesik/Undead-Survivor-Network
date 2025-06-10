@@ -7,8 +7,8 @@ public class Item : MonoBehaviour
 {
     public ItemData data;
     public int level;
-    public Weapon weapon;
-    public Gear gear;
+    //public Weapon weapon;
+    //public Gear gear;
 
     Image icon;
     Text textLevel;
@@ -22,9 +22,6 @@ public class Item : MonoBehaviour
 
         Text[] texts = GetComponentsInChildren<Text>();
         textLevel = texts[0];
-        //textName = texts[1];
-        //textDesc = texts[2];
-        //textName.text = data.itemName;
     }
 
 
@@ -32,30 +29,6 @@ public class Item : MonoBehaviour
     {
         textLevel.text = "Lv. " + level;
     }
-
-
-    //void OnEnable()
-    //{
-    //    textLevel.text = "Lv. " + (level + 1);
-
-
-    //    //switch (data.itemType)
-    //    //{
-    //    //    case ItemData.ItemType.Melee:
-    //    //    case ItemData.ItemType.Range:
-    //    //        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
-    //    //        break;
-
-    //    //    case ItemData.ItemType.Glove:
-    //    //    case ItemData.ItemType.Shoe:
-    //    //        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
-    //    //        break;
-
-    //    //    default:
-    //    //        textDesc.text = string.Format(data.itemDesc);
-    //    //        break;
-    //    //}
-    //}
 
     public void OnClick()
     {
@@ -114,19 +87,24 @@ public class Item : MonoBehaviour
                 break;
 
             case ItemData.ItemType.Glove:
+
+                GameManager.instance.gear0.LevelUp(data.damages[level]);
+                level++;
+                break;
+
             case ItemData.ItemType.Shoe:
-                if (level == 0)
-                {
-                    GameObject newGear = new GameObject();
-                    gear = newGear.AddComponent<Gear>();
+                //if (level == 0)
+                //{
+                //    GameObject newGear = new GameObject();
+                //    gear = newGear.AddComponent<Gear>();
 
-                    gear.Init(data);
-                }
-                else
+                //    gear.Init(data);
+                //}
+                
                 {
-                    float nextRate = data.damages[level];
+     
 
-                    gear.LevelUp(nextRate);
+                    GameManager.instance.gear1.LevelUp(data.damages[level]);
                 }
 
                 level++;

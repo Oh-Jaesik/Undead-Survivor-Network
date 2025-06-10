@@ -2,23 +2,32 @@ using UnityEngine;
 using UnityEngine.TextCore.Text;
 using Mirror;
 
-public class Gear : MonoBehaviour
+public class Gear : NetworkBehaviour
 {
     public ItemData.ItemType type;
     public float rate;
+    public int id;
 
-    public void Init(ItemData data)
+    public override void OnStartLocalPlayer()
     {
-        //Basic Set
-        name = "Gear " + data.itemId;
-        transform.parent = GameManager.instance.player.transform;
-        transform.localPosition = Vector3.zero;
-
-        //Property Set
-        type = data.itemType;
-        rate = data.damages[0];
-        ApplyGear();
+        if (id == 2)
+            GameManager.instance.gear0 = this;
+        if (id == 3)
+            GameManager.instance.gear1 = this;
     }
+
+    //public void Init(ItemData data)
+    //{
+    //    //Basic Set
+    //    name = "Gear " + data.itemId;
+    //    transform.parent = GameManager.instance.player.transform;
+    //    transform.localPosition = Vector3.zero;
+
+    //    //Property Set
+    //    type = data.itemType;
+    //    rate = data.damages[0];
+    //    ApplyGear();
+    //}
 
     public void LevelUp(float rate)
     {
@@ -48,13 +57,11 @@ public class Gear : MonoBehaviour
             switch (weapon.id)
             {
                 case 0:
-                    float speed = 150f;
-                    weapon.speed = speed + speed * rate;
+                    weapon.speed += 500 * rate;
                     break;
 
                 default:
-                    speed = 1f;
-                    weapon.speed = speed * (1.1f - rate);     // 확인용 코드 수정
+                    weapon.speed -= rate;     // 확인용 코드 수정
                     break;
             }
         }
@@ -62,7 +69,6 @@ public class Gear : MonoBehaviour
 
     void SpeedUp()
     {
-        float speed = 3;
-        GameManager.instance.player.speed = speed + speed * rate;
+        GameManager.instance.player.speed += rate;
     }
 }

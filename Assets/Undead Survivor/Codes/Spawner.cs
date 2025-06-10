@@ -36,7 +36,7 @@ public class Spawner : NetworkBehaviour
         GameObject enemy = GameManager.instance.pool.Get(0, spawnPoint[Random.Range(1, spawnPoint.Length)].position, Quaternion.identity);
         //enemy.transform.position = spawnPoint[Random.Range(1, spawnPoint.Length)].position;     // player 위치 빼고 1부터 시작
         enemy.transform.parent = GameManager.instance.pool.transform;
-        enemy.GetComponent<Enemy>().Init(spawnData[level]);
+        enemy.GetComponent<Enemy>().Init(spawnData[Random.Range(0,level+1)]);
     }
 }
 
