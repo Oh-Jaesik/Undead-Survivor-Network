@@ -7,13 +7,11 @@ public class Item : MonoBehaviour
 {
     public ItemData data;
     public int level;
-    //public Weapon weapon;
-    //public Gear gear;
 
     Image icon;
     Text textLevel;
-    Text textName;
-    Text textDesc;
+    //Text textName;
+    //Text textDesc;
 
     void Awake()
     {
@@ -35,88 +33,47 @@ public class Item : MonoBehaviour
         if (GameManager.instance.player.statPoints <= 0)
             return;
 
-
+        // ScriptObj의 damage, count 값을 그대로 읽어오도록 수정
+        // 기존의 weapon,gear Init함수 삭제 (일관성을 위해)
+        // weapon 0, 1의 경우 직접 bullet을 생성해서 동기화 해야하므로 Cmd 함수 (동기화용) 사용
         switch (data.itemType)
         {
             case ItemData.ItemType.Melee:
 
-
-                if (level == 0)
-                {
-                    // 서버에서 무기 생성 및 Init
-                    GameManager.instance.weapon.Init(data);
-                    // 이 무기는 미리 생성되어 있어야 하며, NetworkServer.Spawn도 서버에서 호출되어야 함
-
-
-
-                }
-                else
-                {
-                    // 서버에게 레벨업 요청
-                    GameManager.instance.weapon.CmdLevelUp(
-                        data.baseDamage + data.baseDamage * data.damages[level],
-                        data.counts[level]);
-
-                }
-
+                GameManager.instance.weapon.CmdLevelUp(data.damages[level], data.counts[level]);
                 level++;
+
                 break;
 
-
             case ItemData.ItemType.Range:
-                if (level == 0)
-                {
-                    // 서버에서 무기 생성 및 Init
-                    GameManager.instance.weapon1.Init(data);
-                    // 이 무기는 미리 생성되어 있어야 하며, NetworkServer.Spawn도 서버에서 호출되어야 함
 
-                    //GameManager.instance.weapon1.speed /= 1000;
-
-
-                }
-                else
-                {
-                    // 서버에게 레벨업 요청
-                    GameManager.instance.weapon1.CmdLevelUp(data.baseDamage + data.baseDamage * data.damages[level], data.counts[level]);
-
-                    //GameManager.instance.weapon1.speed /= 2;
-
-                }
-
+                GameManager.instance.weapon1.CmdLevelUp(data.damages[level], data.counts[level]);
                 level++;
+
                 break;
 
             case ItemData.ItemType.Glove:
 
                 GameManager.instance.gear0.LevelUp(data.damages[level]);
                 level++;
+
                 break;
 
             case ItemData.ItemType.Shoe:
-                //if (level == 0)
-                //{
-                //    GameObject newGear = new GameObject();
-                //    gear = newGear.AddComponent<Gear>();
 
-                //    gear.Init(data);
-                //}
-                
-                {
-     
-
-                    GameManager.instance.gear1.LevelUp(data.damages[level]);
-                }
-
+                GameManager.instance.gear1.LevelUp(data.damages[level]);
                 level++;
 
                 break;
 
             case ItemData.ItemType.Heal:
-                GameManager.instance.player.health = GameManager.instance.maxHealth;
+
+                GameManager.instance.player.health = GameManager.instance.player.maxHealth;
+
                 break;
         }
 
-        GameManager.instance.player.statPoints--;
+        GameManager.instance.player.statPoints--;       // 레벨업 버튼 클릭시 스탯 감소
 
 
         if (level == data.damages.Length)
@@ -124,7 +81,4 @@ public class Item : MonoBehaviour
             GetComponent<Button>().interactable = false;
         }
     }
-
-
 }
-

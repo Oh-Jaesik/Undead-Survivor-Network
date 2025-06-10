@@ -10,24 +10,17 @@ public class Gear : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
-        if (id == 2)
-            GameManager.instance.gear0 = this;
-        if (id == 3)
-            GameManager.instance.gear1 = this;
+        switch (id)
+        {
+            case 2:
+                GameManager.instance.gear0 = this;
+                break;
+
+            case 3:
+                GameManager.instance.gear1 = this;
+                break;
+        }
     }
-
-    //public void Init(ItemData data)
-    //{
-    //    //Basic Set
-    //    name = "Gear " + data.itemId;
-    //    transform.parent = GameManager.instance.player.transform;
-    //    transform.localPosition = Vector3.zero;
-
-    //    //Property Set
-    //    type = data.itemType;
-    //    rate = data.damages[0];
-    //    ApplyGear();
-    //}
 
     public void LevelUp(float rate)
     {
@@ -57,11 +50,13 @@ public class Gear : NetworkBehaviour
             switch (weapon.id)
             {
                 case 0:
-                    weapon.speed += 500 * rate;
+                    weapon.speed = 150 + rate * 500;        // 근접무기 회전속도 증가
                     break;
 
-                default:
-                    weapon.speed -= rate;     // 확인용 코드 수정
+                case 1:
+                    // 원거리무기 기본쿨(speed) 1000 (즉 쿨타임이 매우 길어 발사 안함)
+                    if (GameManager.instance.weapon1.speed < 10)        // 원거리무기 레벨 1이상인지 확인, 원거리무기 레벨 0에서 공속업시 원거리무기 작동 방지
+                        weapon.speed = 1 - 2 * rate;        // 원거리무기 발사 쿨 감소, 즉 공속업
                     break;
             }
         }

@@ -192,8 +192,8 @@ MonoBehaviour:
   animCon:
   - {fileID: 9100000, guid: 49ae160bb44c0894d906532827726896, type: 2}
   - {fileID: 22100000, guid: 075181be36eca43439b5e7118b09babc, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 22100000, guid: 59e644464bd65494cb15ff760e8a531d, type: 2}
+  - {fileID: 22100000, guid: 431280c4f77e5a649b7ea3d474566daa, type: 2}
   animControllerIndex: 0
   statPoints: 1
 --- !u!95 &1831404935922481106
@@ -725,10 +725,9 @@ MonoBehaviour:
   syncInterval: 0
   id: 0
   prefabId: 1
-  speed: 150
-  player: {fileID: 0}
   damage: 10
-  count: 3
+  count: 1
+  speed: 150
 --- !u!1 &6393413395486268502
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,10 +777,9 @@ MonoBehaviour:
   syncInterval: 0
   id: 1
   prefabId: 2
-  speed: 1000
-  player: {fileID: 0}
   damage: 5
   count: 0
+  speed: 1000
 --- !u!1 &7857499031625520069
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,12 +8,8 @@ public class Bullet : NetworkBehaviour
 
     public Transform followTarget;  
     public Vector3 offset;         
-
     Rigidbody2D rigid;
-
-
     public Weapon ownerWeapon;
-
 
     void Awake()
     {
@@ -28,7 +24,6 @@ public class Bullet : NetworkBehaviour
             transform.position = followTarget.position + followTarget.rotation * offset;
         }
     }
-
 
     public void Init(float damage, int per, Vector3 dir)
     {

@@ -3,6 +3,7 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.UIElements;
 
+// 수정 필요. 지금 
 public class PoolManager : NetworkBehaviour
 {
     public GameObject[] prefabs;
@@ -53,7 +54,7 @@ public class PoolManager : NetworkBehaviour
     [Server]
     public void ReturnToPool(GameObject obj)
     {
-        NetworkServer.UnSpawn(obj); // <--- ★★★ 중요: 네트워크에서 오브젝트를 명시적으로 스폰 해제 ★★★
-        obj.SetActive(false); // 오브젝트를 비활성화합니다.
+        NetworkServer.UnSpawn(obj); // 네트워크에서 오브젝트 스폰 해제
+        obj.SetActive(false); 
     }
 }

@@ -51,25 +51,15 @@ public class NetworkScript : NetworkBehaviour
     {
         if (NetworkServer.active && NetworkClient.isConnected)
         {
-            // Host일 경우
+            // Host
             Debug.Log("Stopping Host...");
             NetworkManager.singleton.StopHost();
         }
         else if (NetworkClient.isConnected)
         {
-            // Client일 경우
+            // Client
             Debug.Log("Stopping Client...");
             NetworkManager.singleton.StopClient();
-
-            //// 필요 시 UI나 씬 상태 리셋
-            //if (canvas != null)
-            //    canvas.gameObject.SetActive(true); // 다시 UI 보여주기
-        }
-        else if (NetworkServer.active)
-        {
-            // Dedicated server
-            Debug.Log("Stopping Server...");
-            NetworkManager.singleton.StopServer();
         }
     }
 }

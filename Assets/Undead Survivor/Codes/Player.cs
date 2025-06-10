@@ -6,33 +6,26 @@ public class Player : NetworkBehaviour
 {
     [SyncVar]
     public float health;
-    public float maxHealth = 100;
-
-    [SyncVar(hook = nameof(OnInputVecChanged))]
-    public Vector2 inputVec;
-
+    public float maxHealth;
     public float speed;
-    public Scanner scanner;
+    public int statPoints;
+    float timer;
 
+    public Scanner scanner;
     Rigidbody2D rigid;
     SpriteRenderer spriter;
     public Animator anim;
-
     public RuntimeAnimatorController[] animCon;
 
+    [SyncVar(hook = nameof(OnInputVecChanged))]
+    public Vector2 inputVec;
     [SyncVar(hook = nameof(OnAnimControllerIndexChanged))]
     public int animControllerIndex;
 
-    public int statPoints;
-
-    float timer; // 실험용
-
-
     void OnAnimControllerIndexChanged(int oldIndex, int newIndex)
     {
-        anim.runtimeAnimatorController = animCon[newIndex];
+        anim.runtimeAnimatorController = animCon[newIndex];     // player 캐릭터 스프라이트 설정
     }
-
 
     void Awake()
     {
@@ -83,16 +76,13 @@ public class Player : NetworkBehaviour
         Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         CmdSetInputVec(moveInput);
 
-
-
         timer += Time.deltaTime;
 
         if (timer > GameManager.instance.weapon1.speed)
         {
             timer = 0f;
-            CmdFire();
+            CmdFire();      // 원거리 무기 발사
         }
-
 
         CmdChangeAnimController(animControllerIndex);
         anim.runtimeAnimatorController = animCon[animControllerIndex];
@@ -101,12 +91,8 @@ public class Player : NetworkBehaviour
     [Command]
     void CmdChangeAnimController(int index)
     {
-        if (index >= 0 && index < animCon.Length)
-        {
-            anim.runtimeAnimatorController = animCon[index];
-        }
+        anim.runtimeAnimatorController = animCon[index];
     }
-
 
     [Command]
     void CmdSetInputVec(Vector2 moveInput)
@@ -123,7 +109,6 @@ public class Player : NetworkBehaviour
         rigid.MovePosition(rigid.position + nextVec);
     }
 
-
     void OnInputVecChanged(Vector2 oldVec, Vector2 newVec)
     {
         anim.SetFloat("Speed", newVec.magnitude);
@@ -131,8 +116,6 @@ public class Player : NetworkBehaviour
         if (newVec.x != 0)
             spriter.flipX = newVec.x < 0;
     }
-
-
 
     [Server]
     void OnCollisionStay2D(Collision2D collision)
@@ -172,12 +155,8 @@ public class Player : NetworkBehaviour
         bullet.transform.position = transform.position;
         bullet.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);       // 총알의 로컬기준 위방향을 dir로 설정
 
-
         bullet.followTarget = transform;
-
 
         bullet.GetComponent<Bullet>().Init(GameManager.instance.weapon1.damage, GameManager.instance.weapon1.count, dir);
     }
-
-
 }

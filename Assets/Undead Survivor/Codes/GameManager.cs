@@ -9,6 +9,7 @@ public class GameManager : NetworkBehaviour
     public static GameManager instance;
 
     [Header("# Game Control")]
+
     [SyncVar]
     public bool isLive;        // SyncVar 없이, 로컬 플레이어 상태로만 사용
     [SyncVar]
@@ -16,40 +17,35 @@ public class GameManager : NetworkBehaviour
     public float maxGameTime = 2 * 10f;
 
     [Header("# Player Info (shared)")]
-    public int playerId;
-    public float health;
-    public float maxHealth = 100;
 
+    public int playerId;
     [SyncVar(hook = nameof(OnLevelChanged))]
     public int level;
-
     [SyncVar]
     public int kill;
-
     [SyncVar]
     public int exp;
-
     public int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
 
     [Header("# Game Object")]
+
     public PoolManager pool;
     public Player player;
     public List<Player> players = new List<Player>();
-    //public LevelUp uiLevelUp;
     public Result uiResult;
     public GameObject enemyCleaner;
 
-    public Weapon weapon;   // 추가
-    public Weapon weapon1;   // 추가
+    [Header("# Player Weapon")]
+    public Weapon weapon;
+    public Weapon weapon1;
     public Gear gear0;
     public Gear gear1;
 
-    
+
     public void GameStart(int id)
     {
-        Debug.Log("hello");
         //playerId = id;
-        health = maxHealth;
+        player.health = player.maxHealth;
         player.gameObject.SetActive(true);
 
         player.animControllerIndex = id;

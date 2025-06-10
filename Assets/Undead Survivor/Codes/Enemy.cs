@@ -5,12 +5,11 @@ using UnityEngine;
 
 public class Enemy : NetworkBehaviour
 {
-    public float speed;
-
     [SyncVar]
     public float health;
     [SyncVar]
     public float maxHealth;
+    public float speed;
     [SyncVar(hook = nameof(OnSpriteTypeChanged))]
     public int spriteType;
     [SyncVar]

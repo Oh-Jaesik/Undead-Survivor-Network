@@ -8,17 +8,6 @@ public class Weapon : NetworkBehaviour
 {
     public int id;
     public int prefabId;
-    [SyncVar(hook = nameof(OnSpeedChanged))]
-    public float speed;
-
-    void OnSpeedChanged(float oldValue, float newValue)
-    {
-        speed = newValue;
-    }
-
-
-    float timer;
-    public Player player;
 
     [SyncVar(hook = nameof(OnDamageChanged))]
     public float damage;
@@ -26,11 +15,26 @@ public class Weapon : NetworkBehaviour
     [SyncVar(hook = nameof(OnCountChanged))]
     public int count;
 
+    [SyncVar(hook = nameof(OnSpeedChanged))]
+    public float speed;
+
+    void OnDamageChanged(float oldValue, float newValue)
+    {
+        damage = newValue;
+    }
+
+    void OnCountChanged(int oldValue, int newValue)
+    {
+        count = newValue;
+    }
+
+    void OnSpeedChanged(float oldValue, float newValue)
+    {
+        speed = newValue;
+    }
 
     public override void OnStartLocalPlayer()
     {
-        player = GameManager.instance.player;
-
         if (id == 0)
             GameManager.instance.weapon = this;
         if (id == 1)
@@ -51,45 +55,19 @@ public class Weapon : NetworkBehaviour
                 transform.Rotate(Vector3.back * speed * Time.deltaTime);
                 break;
 
-            //default:
-            //    timer += Time.deltaTime;
-
-            //    if (timer > speed)
-            //    {
-            //        timer = 0f;
-
-            //        Fire();
-            //    }
-
-            //    break;
         }
     }
 
-
     public void Init(ItemData data)
     {
-        //if (!isServer)
-        //    return;
-
-
         // Basic Set
         //name = "Weapon " + data.itemId;
         //transform.parent = player.transform;
         //transform.localPosition = Vector3.zero;
 
-
         id = data.itemId;
         damage = data.baseDamage;
         count = data.baseCount;
-
-        for (int i = 0; i < GameManager.instance.pool.prefabs.Length; i++)
-        {
-            if (data.projectile == GameManager.instance.pool.prefabs[i])
-            {
-                prefabId = i;
-                break;
-            }
-        }
 
         switch (id)
         {
@@ -103,46 +81,25 @@ public class Weapon : NetworkBehaviour
         }
     }
 
-    //[Server]
-    //public void Init()
-    //{
-
-
-    //    switch (id)
-    //    {
-    //        case 0:
-    //            speed = 150;
-    //            Batch();
-    //            break;
-    //        default:
-    //            speed = 0.3f;
-    //            break;
-    //    }
-    //}
-
     [Command]
     public void CmdLevelUp(float newDamage, int addCount)
     {
+        // ScriptObj의 damage, count 값을 그대로 읽어오도록 수정
         damage = newDamage;
-        count += addCount;
+        count = addCount;
 
-        if (id == 0)
+        // speed 공식은 Gear코드 참고
+        switch (id)
         {
-            Batch();
+            case 0:
+                speed = 150 + 500 * GameManager.instance.gear0.rate;
+                Batch();
+                break;
+            case 1:
+                speed = 1f - 2 * GameManager.instance.gear0.rate;
+                break;
         }
     }
-
-
-    void OnDamageChanged(float oldValue, float newValue)
-    {
-        damage = newValue;
-    }
-
-    void OnCountChanged(int oldValue, int newValue)
-    {
-        count = newValue;
-    }
-
 
     [Server]
     void Batch()
@@ -166,42 +123,17 @@ public class Weapon : NetworkBehaviour
 
             //GameObject bulletObj = GameManager.instance.pool.Get(prefabId, transform.position, Quaternion.identity);
 
-            Debug.Log("hello!");
             GameObject bulletObj = Instantiate(GameManager.instance.pool.prefabs[prefabId], transform.position, Quaternion.identity);
             NetworkServer.Spawn(bulletObj);
 
 
             Bullet bullet = bulletObj.GetComponent<Bullet>();
 
-            bullet.ownerWeapon = this;      // bullet 주인 누구인지
+            bullet.ownerWeapon = this;      // bullet 주인 누구인지 (오브젝트 상속 대체)
             bullet.followTarget = transform;
             bullet.offset = offset;
 
             bullet.Init(damage, -1, Vector3.zero);
         }
     }
-
-
-    //[Server]
-    //public void Fire()
-    //{
-    //    if (!player.scanner.nearestTarget)
-    //        return;
-
-    //    Vector3 targetPos = player.scanner.nearestTarget.position;
-    //    Vector3 dir = targetPos - transform.position;
-    //    dir = dir.normalized;
-
-    //    GameObject bulletObj = GameManager.instance.pool.Get(prefabId, transform.position, Quaternion.identity);
-    //    Bullet bullet = bulletObj.GetComponent<Bullet>();
-
-    //    bullet.transform.position = transform.position;
-    //    bullet.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);       // 총알의 로컬기준 위방향을 dir로 설정
-
-
-    //    bullet.followTarget = transform;
-
-
-    //    bullet.GetComponent<Bullet>().Init(damage, count, dir);
-    //}
 }
