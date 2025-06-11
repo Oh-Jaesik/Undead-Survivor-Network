@@ -26,6 +26,7 @@ public class Enemy : NetworkBehaviour
     Collider2D coll;
     Animator anim;
     SpriteRenderer spriter;
+    Transform player;
 
     void Awake()
     {
@@ -109,7 +110,13 @@ public class Enemy : NetworkBehaviour
         if (!isServer) return;
 
         health -= collision.GetComponent<Bullet>().damage;
-        Transform player = collision.GetComponent<Bullet>().followTarget.parent;
+
+        if (collision.GetComponent<Bullet>().per == -100)
+        { 
+            player = collision.GetComponent<Bullet>().followTarget.parent; 
+        }
+        else { player = collision.GetComponent<Bullet>().followTarget; }
+
         //StartCoroutine(KnockBack());      // 넉백 기능 삭제 (동기화 지연 사유)
 
         if (health > 0)

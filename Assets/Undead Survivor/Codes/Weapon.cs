@@ -133,7 +133,7 @@ public class Weapon : NetworkBehaviour
             bullet.followTarget = transform;
             bullet.offset = offset;
 
-            bullet.Init(damage, -1, Vector3.zero);
+            bullet.Init(damage, -100, Vector3.zero);
         }
     }
 }

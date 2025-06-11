@@ -19,7 +19,7 @@ public class Bullet : NetworkBehaviour
     void Update()
     {
 
-        if (per == -1 && followTarget != null)
+        if (per == -100 && followTarget != null)
         {
             transform.position = followTarget.position + followTarget.rotation * offset;
         }
@@ -39,16 +39,24 @@ public class Bullet : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Enemy") || per == -1)
+        if (!collision.CompareTag("Enemy") || per == -100)
             return;
 
         per--;
 
-        if (per == -1)
+        if (per < 0)
         {
             rigid.linearVelocity = Vector2.zero;
             //gameObject.SetActive(false);
             GameManager.instance.pool.ReturnToPool(gameObject);     // network unspawn
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (!collision.CompareTag("Area") || per == -100)
+            return;
+
+        GameManager.instance.pool.ReturnToPool(gameObject);
     }
 }
