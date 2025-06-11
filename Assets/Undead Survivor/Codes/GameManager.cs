@@ -9,55 +9,52 @@ public class GameManager : NetworkBehaviour
     public static GameManager instance;
 
     [Header("# Game Control")]
+
+    [SyncVar]
     public bool isLive;        // SyncVar 없이, 로컬 플레이어 상태로만 사용
     [SyncVar]
     public float gameTime;
     public float maxGameTime = 2 * 10f;
 
     [Header("# Player Info (shared)")]
-    public int playerId;
-    public float health;
-    public float maxHealth = 100;
 
+    public int playerId;
     [SyncVar(hook = nameof(OnLevelChanged))]
     public int level;
-
-    [SyncVar(hook = nameof(OnKillChanged))]
+    [SyncVar]
     public int kill;
-
-    [SyncVar(hook = nameof(OnExpChanged))]
+    [SyncVar]
     public int exp;
-
     public int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
 
     [Header("# Game Object")]
+
     public PoolManager pool;
     public Player player;
     public List<Player> players = new List<Player>();
-    //public LevelUp uiLevelUp;
     public Result uiResult;
     public GameObject enemyCleaner;
 
-    public Weapon weapon;   // 추가
-    public Gear gear;
+    [Header("# Player Weapon")]
+    public Weapon weapon;
+    public Weapon weapon1;
+    public Gear gear0;
+    public Gear gear1;
 
-    
+
     public void GameStart(int id)
     {
         //playerId = id;
-        health = maxHealth;
+        player.health = player.maxHealth;
         player.gameObject.SetActive(true);
 
         player.animControllerIndex = id;
-        //player.anim.runtimeAnimatorController = player.animCon[GameManager.instance.playerId]; // ?
 
         enemyCleaner.SetActive(false);
 
-        //uiLevelUp.select(0);
         Resume();
     }
 
-   
     public void GameOver()
     {
         StartCoroutine(GameOverRoutine());
@@ -71,6 +68,9 @@ public class GameManager : NetworkBehaviour
 
         uiResult.gameObject.SetActive(true);
         uiResult.Lose();
+        Stop();     // 작동안해서 위에 복사해둠. 로그인 코드 이상 발생 가능??
+
+
         Debug.Log("?? FirebaseManager.Instance: " + (FirebaseManager.Instance != null));
         Debug.Log("?? FirebaseManager.dbRef: " + (FirebaseManager.Instance?.dbRef != null));
 
@@ -83,7 +83,7 @@ public class GameManager : NetworkBehaviour
         Stop();
     }
 
-    
+
     public void GameVictory()
     {
         StartCoroutine(GameVictoryRoutine());
@@ -98,12 +98,14 @@ public class GameManager : NetworkBehaviour
 
         uiResult.gameObject.SetActive(true);
         uiResult.Win();
+
         yield return new WaitUntil(() =>
            FirebaseManager.Instance != null &&
            FirebaseManager.Instance.dbRef != null
        );//firebase 초기화
 
         FirebaseManager.Instance.SaveUserData();
+
         Stop();//데이터 저장
     }
 
@@ -178,12 +180,9 @@ public class GameManager : NetworkBehaviour
 
     void OnLevelChanged(int oldLevel, int newLevel)
     {
-        //if (isServer)
-            GameManager.instance.player.statPoints++; // 레벨 증가만큼 스탯 포인트 지급
+        GameManager.instance.player.statPoints++; // 레벨 증가만큼 스탯 획득
     }
 
-    void OnKillChanged(int oldKill, int newKill) { }
-    void OnExpChanged(int oldExp, int newExp) { }
 
     [Server]
     public void RegisterPlayer(Player player)

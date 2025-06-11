@@ -1,12 +1,12 @@
 using UnityEngine;
 using Mirror;
 
-public class Spawner : NetworkBehaviour        // player 밑에 spawner 오브젝트 붙어있음. 그밑에 spawn point 오브젝트 붙어있음.
+public class Spawner : NetworkBehaviour
 {
     public Transform[] spawnPoint;
     public SpawnData[] spawnData;
 
-    int level;
+    int level;      // 몬스터 레벨
     float timer;
 
     void Awake()
@@ -34,9 +34,8 @@ public class Spawner : NetworkBehaviour        // player 밑에 spawner 오브젝트 �
     void Spawn()
     {
         GameObject enemy = GameManager.instance.pool.Get(0, spawnPoint[Random.Range(1, spawnPoint.Length)].position, Quaternion.identity);
-        //enemy.transform.position = spawnPoint[Random.Range(1, spawnPoint.Length)].position;     // player 위치 빼고 1부터 시작
         enemy.transform.parent = GameManager.instance.pool.transform;
-        enemy.GetComponent<Enemy>().Init(spawnData[level]);
+        enemy.GetComponent<Enemy>().Init(spawnData[Random.Range(0,level+1)]);       // 0부터 현재 시간기준 몬스터 레벨까지 몬스터 랜덤 생성
     }
 }
 

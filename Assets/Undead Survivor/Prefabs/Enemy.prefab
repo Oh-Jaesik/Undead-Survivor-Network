@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6588662554444234779}
   - component: {fileID: 8923127159056838214}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 1256101431212998104}
   - component: {fileID: 4409157810987971220}
   - component: {fileID: 9156946208977523080}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -290,6 +290,8 @@ MonoBehaviour:
   animCon:
   - {fileID: 22100000, guid: 050556270436d4f4288557291a1a99c0, type: 2}
   - {fileID: 22100000, guid: 12cfc8b2360c2fc4499d4f6f6607671a, type: 2}
+  - {fileID: 22100000, guid: 8d1d920724ffb8a409ce0e458dc4b7a9, type: 2}
+  - {fileID: 22100000, guid: 25f7a818644b68042bb0c0c2a28d1550, type: 2}
   target: {fileID: 0}
   currentFlipXState: 0
 --- !u!114 &4409157810987971220

@@ -1,22 +1,19 @@
 using Mirror;
 using System.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class Enemy : NetworkBehaviour
 {
-    public float speed;
-
     [SyncVar]
     public float health;
     [SyncVar]
     public float maxHealth;
+    public float speed;
     [SyncVar(hook = nameof(OnSpriteTypeChanged))]
     public int spriteType;
     [SyncVar]
     public bool isLive;
-
-    [SyncVar(hook = nameof(OnDeadStateChanged))]
-    public bool isDead;
 
     public RuntimeAnimatorController[] animCon;
     public Rigidbody2D target;
@@ -44,20 +41,12 @@ public class Enemy : NetworkBehaviour
         if (isServer)
         {
             isLive = true;
-            isDead = false;
             coll.enabled = true;
             rigid.simulated = true;
             spriter.sortingOrder = 2;
             anim.SetBool("Dead", false);
             health = maxHealth;
         }
-
-        //if (isServer)
-        //{
-        //    Player nearestPlayer = GameManager.instance.GetNearestPlayer(transform.position); // 가장 가까운 플레이어
-        //    if (nearestPlayer != null)
-        //        target = nearestPlayer.GetComponent<Rigidbody2D>();
-        //}
     }
 
     void FixedUpdate()
@@ -101,16 +90,6 @@ public class Enemy : NetworkBehaviour
         }
     }
 
-    void OnDeadStateChanged(bool oldValue, bool newValue)
-    {
-        if (anim != null)
-        {
-            anim.SetBool("Dead", newValue);
-            coll.enabled = !newValue;
-            rigid.simulated = !newValue;
-            spriter.sortingOrder = newValue ? 1 : 2;
-        }
-    }
 
     [Server]
     public void Init(SpawnData data)
@@ -120,7 +99,6 @@ public class Enemy : NetworkBehaviour
         maxHealth = data.health;
         health = data.health;
         isLive = true;
-        isDead = false;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -132,7 +110,7 @@ public class Enemy : NetworkBehaviour
 
         health -= collision.GetComponent<Bullet>().damage;
         Transform player = collision.GetComponent<Bullet>().followTarget.parent;
-        StartCoroutine(KnockBack());
+        //StartCoroutine(KnockBack());      // 넉백 기능 삭제 (동기화 지연 사유)
 
         if (health > 0)
         {
@@ -142,9 +120,13 @@ public class Enemy : NetworkBehaviour
         else
         {
             isLive = false;
-            isDead = true;
             coll.enabled = false;
             rigid.simulated = false;
+            spriter.sortingOrder = 1;
+
+            RpcPlayDeadAnim();
+            anim.SetBool("Dead", true);
+
             StartCoroutine(DelayedDead());
 
             GameManager.instance.AddKill();
@@ -164,6 +146,14 @@ public class Enemy : NetworkBehaviour
     }
 
     [ClientRpc]
+    void RpcPlayDeadAnim()
+    {
+        if (anim != null)
+            anim.SetBool("Dead", true);
+    }
+
+
+    [ClientRpc]
     void RpcPlayHitAnim()
     {
         if (anim != null)
@@ -175,12 +165,11 @@ public class Enemy : NetworkBehaviour
     {
         yield return new WaitForSeconds(1f); // 죽는 애니메이션 재생 시간
 
-        Dead();
+        GameManager.instance.pool.ReturnToPool(gameObject);     // network unspawn
     }
 
-    [Server]
     void Dead()
     {
-        GameManager.instance.pool.ReturnToPool(gameObject);
+        gameObject.SetActive(false);
     }
 }

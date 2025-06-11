@@ -3,11 +3,19 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { Exp, Level, Kill, Time, Heatlth , Stat};
+    public enum InfoType { Exp, Level, Kill, Time, Heatlth, Stat };
     public InfoType type;
 
     Text myText;
     Slider mySlider;
+
+    public GameObject targetObject;     // 토글용 오브젝트
+
+    public void ToggleActive()      // 토글 함수 (UI 껐다 켰다)
+    {
+        if (targetObject != null)
+            targetObject.SetActive(!targetObject.activeSelf);
+    }
 
     void Awake()
     {
@@ -26,11 +34,7 @@ public class HUD : MonoBehaviour
                 break;
 
             case InfoType.Level:
-                myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
-                break;
-
-            case InfoType.Stat:
-                myText.text = string.Format("{0:F0} SP", GameManager.instance.player.statPoints);
+                myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level + 1);
                 break;
 
             case InfoType.Kill:
@@ -45,11 +49,13 @@ public class HUD : MonoBehaviour
                 break;
 
             case InfoType.Heatlth:
-                //float curHealth = GameManager.instance.health;
                 float curHealth = GameManager.instance.player.health;
-
-                float maxHealth = GameManager.instance.maxHealth;
+                float maxHealth = GameManager.instance.player.maxHealth;
                 mySlider.value = curHealth / maxHealth;
+                break;
+
+            case InfoType.Stat:
+                myText.text = string.Format("{0:F0}P", GameManager.instance.player.statPoints);
                 break;
         }
     }

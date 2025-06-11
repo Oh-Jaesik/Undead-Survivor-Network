@@ -63,7 +63,7 @@ public class FirebaseManager : MonoBehaviour
         { "level", GameManager.instance.level },
         { "exp", GameManager.instance.exp },
         { "kill", GameManager.instance.kill },
-        { "maxHealth", (int)GameManager.instance.maxHealth },
+        { "maxHealth", (int)GameManager.instance.player.maxHealth },
         { "playerId", GameManager.instance.playerId }
     };
 
