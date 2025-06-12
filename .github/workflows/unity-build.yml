@@ -3,44 +3,34 @@ name: Unity Build
 on:
   push:
     branches:
-      - main  # main 브랜치에 push 시 동작
+      - main
   pull_request:
     branches:
       - main
 
 jobs:
   build:
-    name: Build Windows Standalone
-    runs-on: ubuntu-latest  # game-ci는 우분투 환경에서 Unity 빌드 권장 (Windows 빌드도 가능)
-    
+    runs-on: ubuntu-latest
+
     steps:
-      # 1. 코드 체크아웃
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # 2. Setup Unity (버전 명시 필수)
-      - name: Setup Unity
-        uses: game-ci/unity-setup@v2
+      - name: Cache Library folder
+        uses: actions/cache@v4
         with:
-          unityVersion: 6000.1.0f1  # 프로젝트에 맞는 Unity 버전 입력
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          path: Library
+          key: Library-${{ runner.os }}-${{ hashFiles('**/*.cs') }}
 
-      # 3. Activate Unity (라이선스 활성화)
-      - name: Activate Unity
-        uses: game-ci/unity-activate@v2
+      - name: Unity Builder
+        uses: game-ci/unity-builder@v4
         with:
-          license: ${{ secrets.UNITY_LICENSE }}
+          unityVersion: 6000.1.0f1  # ProjectVersion.txt 에 맞게
+          targetPlatform: StandaloneWindows64
+          buildName: MyGame.exe
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
-      # 4. Build 프로젝트
-      - name: Build project
-        uses: game-ci/unity-builder@v2
+      - uses: actions/upload-artifact@v4
         with:
-          targetPlatform: StandaloneWindows64  # Windows 64비트 빌드
-          buildName: MyGameBuild.exe            # 빌드 파일 이름 지정 가능
-
-      # 5. 빌드 결과 업로드
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: windows-build
+          name: WindowsBuild
           path: build/StandaloneWindows64/
