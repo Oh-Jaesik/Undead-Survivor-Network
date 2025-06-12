@@ -1,8 +1,19 @@
+# Created by https://www.toptal.com/developers/gitignore/api/unity,firebase
+# Edit at https://www.toptal.com/developers/gitignore?templates=unity,firebase
+
+### Firebase ###
+.idea
+**/node_modules/*
+**/.firebaserc
+
+### Firebase Patch ###
+.runtimeconfig.json
+.firebase/
+
+### Unity ###
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
-#
-.utmp/
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -10,7 +21,6 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-*.log
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -61,7 +71,6 @@ sysinfo.txt
 *.apk
 *.aab
 *.unitypackage
-*.unitypackage.meta
 *.app
 
 # Crashlytics generated file
@@ -74,5 +83,4 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-# Firebase SDK 바이너리 무시
-Assets/Firebase/Plugins/
+# End of https://www.toptal.com/developers/gitignore/api/unity,firebase
