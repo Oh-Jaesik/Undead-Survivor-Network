@@ -17,7 +17,7 @@ jobs:
       - name: Set up Unity
         uses: game-ci/unity-actions/setup@main
         with:
-          version: '2022.3.1f1' # 본인 Unity 버전으로 맞추세요
+          version: '6000.1.0f1' # 본인 Unity 버전으로 맞추세요
 
       - name: Activate Unity (Personal license)
         uses: game-ci/unity-actions/activate@main
