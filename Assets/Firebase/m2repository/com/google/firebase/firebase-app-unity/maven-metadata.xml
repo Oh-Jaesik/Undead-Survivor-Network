@@ -1,9 +1,3 @@
-<metadata>
-  <groupId>com.google.firebase</groupId>
-  <artifactId>firebase-app-unity</artifactId>
-  <versioning>
-    <release>12.9.0</release>
-    <versions><version>12.9.0</version></versions>
-    <lastUpdated/>
-  </versioning>
-</metadata>
+version https://git-lfs.github.com/spec/v1
+oid sha256:aff03fee880a27f49b008f09dc6137170fb270518b028ce5b588aaba61fd72df
+size 250
