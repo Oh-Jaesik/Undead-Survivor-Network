@@ -1,41 +1,35 @@
-name: Automated Build ⭐
+name: Build Windows Standalone
 
 on:
-  push: # Master 브랜치에 Push가 되면 빌드가 되도록 동작시킵니다.
-    branches: [ main ]
-    
+  push:
+    branches: [main]
+
 jobs:
   buildWindows:
-    name: 💻 Windows-64 Bit
-    runs-on: windows-latest # 윈도우를 사용합니다.
-    
+    runs-on: windows-latest
+
     steps:
-      # Checkout
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          lfs: true
 
-      # Cache (캐시파일을 생성하여 다음 빌드시 더 빠르게 빌드를 할 수 있도록 해줍니다.)
-      - uses: actions/cache@v4
+      - name: Setup Unity (Windows)
+        uses: game-ci/unity-setup@v2
         with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
+          version: 2022.3.1f1  # ProjectVersion.txt에 맞춰서 입력
 
-      # Build
+      - name: Activate Unity license
+        uses: game-ci/unity-activate@v2
+        with:
+          unityEmail: ${{ secrets.UNITY_EMAIL }}
+          unityPassword: ${{ secrets.UNITY_PASSWORD }}
+          unityLicense: ${{ secrets.UNITY_LICENSE }}
+
       - name: Build project
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        with:
-          targetPlatform: StandaloneWindows64
+        run: |
+          "C:/Program Files/Unity/Hub/Editor/2022.3.1f1/Editor/Unity.exe" -quit -batchmode -projectPath ${{ github.workspace }} -buildWindows64Player build/StandaloneWindows64/game.exe -logFile build/build.log
 
-      # Output
-      - uses: actions/upload-artifact@v4
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
         with:
           name: Windows Build
-          path: build
+          path: build/StandaloneWindows64
