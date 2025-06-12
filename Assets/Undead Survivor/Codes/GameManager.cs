@@ -53,11 +53,17 @@ public class GameManager : NetworkBehaviour
         enemyCleaner.SetActive(false);
 
         Resume();
+
+        AudioManager.instance.PlayBgm(true);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     public void GameOver()
     {
         StartCoroutine(GameOverRoutine());
+
+        AudioManager.instance.PlayBgm(false);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Lose);
     }
 
     IEnumerator GameOverRoutine()
@@ -86,6 +92,8 @@ public class GameManager : NetworkBehaviour
 
     public void GameVictory()
     {
+        AudioManager.instance.PlayBgm(false);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Win);
         StartCoroutine(GameVictoryRoutine());
     }
 
@@ -162,6 +170,7 @@ public class GameManager : NetworkBehaviour
         {
             exp = 0;
             level++;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
         }
     }
 

@@ -115,7 +115,8 @@ public class Enemy : NetworkBehaviour
         { 
             player = collision.GetComponent<Bullet>().followTarget.parent; 
         }
-        else { player = collision.GetComponent<Bullet>().followTarget; }
+        else
+        { player = collision.GetComponent<Bullet>().followTarget; }
 
         //StartCoroutine(KnockBack());      // 넉백 기능 삭제 (동기화 지연 사유)
 
@@ -123,6 +124,7 @@ public class Enemy : NetworkBehaviour
         {
             RpcPlayHitAnim();
             player.GetComponent<AttackTracker>()?.RegisterHit();
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
         }
         else
         {
@@ -138,6 +140,9 @@ public class Enemy : NetworkBehaviour
 
             GameManager.instance.AddKill();
             GameManager.instance.AddExp();
+
+            if (GameManager.instance.isLive)
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
         }
     }
 

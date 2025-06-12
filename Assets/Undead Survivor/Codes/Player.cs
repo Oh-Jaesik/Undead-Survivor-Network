@@ -158,5 +158,7 @@ public class Player : NetworkBehaviour
         bullet.followTarget = transform;
 
         bullet.GetComponent<Bullet>().Init(GameManager.instance.weapon1.damage, GameManager.instance.weapon1.count, dir);
+
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
     }
 }

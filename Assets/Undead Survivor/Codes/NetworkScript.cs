@@ -27,6 +27,7 @@ public class NetworkScript : NetworkBehaviour
         {
             Debug.Log("Starting Host...");
             NetworkManager.singleton.StartHost();
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
         }
     }
 
@@ -44,6 +45,7 @@ public class NetworkScript : NetworkBehaviour
             NetworkManager.singleton.networkAddress = address;
             Debug.Log("Starting Client to address: " + address);
             NetworkManager.singleton.StartClient();
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
         }
     }
 
@@ -54,12 +56,14 @@ public class NetworkScript : NetworkBehaviour
             // Host
             Debug.Log("Stopping Host...");
             NetworkManager.singleton.StopHost();
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
         }
         else if (NetworkClient.isConnected)
         {
             // Client
             Debug.Log("Stopping Client...");
             NetworkManager.singleton.StopClient();
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
         }
     }
 }

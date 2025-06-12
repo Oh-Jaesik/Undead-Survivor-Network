@@ -39,7 +39,7 @@ public class Bullet : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Enemy") || per == -100)
+        if (!collision.CompareTag("Enemy") || per == -100 || per == -1000)
             return;
 
         per--;
