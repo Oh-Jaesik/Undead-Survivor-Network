@@ -11,22 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Unity
-        uses: game-ci/unity-actions/.github/actions/setup@main
+        uses: game-ci/unity-setup@v2
         with:
-          version: '6000.1.0f1'  # 여기에 ProjectVersion.txt 값 입력
+          unityVersion: '6000.1.0f1'
 
       - name: Activate Unity
-        uses: game-ci/unity-actions/.github/actions/activate@main
+        uses: game-ci/unity-activate@v2
         with:
-          email: ${{ secrets.UNITY_EMAIL }}
-          password: ${{ secrets.UNITY_PASSWORD }}
+          unityEmail: ${{ secrets.UNITY_EMAIL }}
+          unityPassword: ${{ secrets.UNITY_PASSWORD }}
+          unitySerial: ${{ secrets.UNITY_LICENSE }}
 
-      - name: Build project
-        uses: game-ci/unity-actions/.github/actions/build@main
+      - name: Build Unity project
+        uses: game-ci/unity-builder@v2
         with:
           targetPlatform: StandaloneWindows64
 
