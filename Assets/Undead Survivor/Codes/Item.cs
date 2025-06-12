@@ -99,8 +99,9 @@ public class Item : MonoBehaviour
 
             case ItemData.ItemType.Heal:
 
+                GameManager.instance.player.maxHealth += 100;       // Heal 레벨업시 이제 최대 체력 증가!
                 GameManager.instance.player.health = GameManager.instance.player.maxHealth;
-
+                level++;
                 break;
         }
 
