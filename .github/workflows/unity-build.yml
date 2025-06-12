@@ -17,7 +17,8 @@ jobs:
         with:
           path: Library
           key: Library-${{ runner.os }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: Library-
+          restore-keys: |
+            Library-
 
       - name: Build with Unity Builder
         uses: game-ci/unity-builder@v4
@@ -29,7 +30,23 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
 
-      - uses: actions/upload-artifact@v4
+      # 선택: zip으로 묶어서 릴리즈할 경우
+      - name: Zip Build
+        run: Compress-Archive -Path build/StandaloneWindows64/* -DestinationPath WindowsBuild.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: WindowsBuild
-          path: build/StandaloneWindows64/
+          tag_name: v1.0.${{ github.run_number }}
+          name: "Windows Build ${{ github.run_number }}"
+          body: "자동 빌드 릴리즈입니다."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Build Artifact to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          files: WindowsBuild.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
