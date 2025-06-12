@@ -1,32 +1,29 @@
-name: Unity Build
+name: Unity Windows Build
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache Library folder
+      - name: Cache Library
         uses: actions/cache@v4
         with:
           path: Library
-          key: Library-${{ runner.os }}-${{ hashFiles('**/*.cs') }}
+          key: Library-${{ runner.os }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-
 
-      - name: Unity Builder
+      - name: Build with Unity Builder
         uses: game-ci/unity-builder@v4
         with:
-          unityVersion: 6000.1.0f1  # ProjectVersion.txt 에 맞게
+          unityVersion: 6000.1.0f1
           targetPlatform: StandaloneWindows64
-          buildName: MyGame.exe
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
