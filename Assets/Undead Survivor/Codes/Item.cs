@@ -1,5 +1,6 @@
 ﻿using Mirror;
 using Mirror.BouncyCastle.Asn1.X509;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,18 +37,48 @@ public class Item : MonoBehaviour
         // ScriptObj의 damage, count 값을 그대로 읽어오도록 수정
         // 기존의 weapon,gear Init함수 삭제 (일관성을 위해)
         // weapon 0, 1의 경우 직접 bullet을 생성해서 동기화 해야하므로 Cmd 함수 (동기화용) 사용
+
+        // 플레이어별 고유 능력 구현!
         switch (data.itemType)
         {
             case ItemData.ItemType.Melee:
 
-                GameManager.instance.weapon.CmdLevelUp(data.damages[level], data.counts[level]);
+
+                switch (GameManager.instance.playerId)
+                {
+                    case 2:
+                        GameManager.instance.weapon.CmdLevelUp(data.damages[level]+10, data.counts[level]);     // 데미지 증가
+                        break;
+
+                    case 3:
+                        GameManager.instance.weapon.CmdLevelUp(data.damages[level], data.counts[level]+2);      // 카운트 증가
+                        break;
+
+                    default:
+                        GameManager.instance.weapon.CmdLevelUp(data.damages[level], data.counts[level]);
+                        break;
+                }
                 level++;
 
                 break;
 
+            // Melee와 동일!
             case ItemData.ItemType.Range:
 
-                GameManager.instance.weapon1.CmdLevelUp(data.damages[level], data.counts[level]);
+                switch (GameManager.instance.playerId)
+                {
+                    case 2:
+                        GameManager.instance.weapon1.CmdLevelUp(data.damages[level] + 10, data.counts[level]);
+                        break;
+
+                    case 3:
+                        GameManager.instance.weapon1.CmdLevelUp(data.damages[level], data.counts[level] + 2);
+                        break;
+
+                    default:
+                        GameManager.instance.weapon1.CmdLevelUp(data.damages[level], data.counts[level]);
+                        break;
+                }
                 level++;
 
                 break;

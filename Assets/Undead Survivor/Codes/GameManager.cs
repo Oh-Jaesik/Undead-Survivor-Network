@@ -14,7 +14,7 @@ public class GameManager : NetworkBehaviour
     public bool isLive;        // SyncVar 없이, 로컬 플레이어 상태로만 사용
     [SyncVar]
     public float gameTime;
-    public float maxGameTime = 2 * 10f;
+    public float maxGameTime;
 
     [Header("# Player Info (shared)")]
 
@@ -25,7 +25,7 @@ public class GameManager : NetworkBehaviour
     public int kill;
     [SyncVar]
     public int exp;
-    public int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
+    public int[] nextExp = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
 
     [Header("# Game Object")]
 
@@ -42,9 +42,35 @@ public class GameManager : NetworkBehaviour
     public Gear gear1;
 
 
+    void Awake()
+    {
+        // 싱글톤 인스턴스 설정
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject); // 중복 방지
+            return;
+        }
+
+        instance = this;
+    }
+
+    // 플레이어별 고유 능력 구현! case 2, 3은 Item 코드에!
     public void GameStart(int id)
     {
-        //playerId = id;
+        playerId = id;
+        switch (id)
+        {
+            case 0:
+                player.maxHealth += 100;
+                player.health += 100;
+                break;
+
+            case 1:
+                player.speed += 3;
+                break;
+        }
+
+
         player.health = player.maxHealth;
         player.gameObject.SetActive(true);
 
@@ -123,10 +149,7 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    void Awake()
-    {
-        instance = this;
-    }
+
 
     [Server]
     void Update()
