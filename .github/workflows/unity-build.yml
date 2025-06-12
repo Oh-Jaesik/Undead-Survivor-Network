@@ -39,7 +39,12 @@ jobs:
         with:
           tag_name: v1.0.${{ github.run_number }}
           name: "Windows Build ${{ github.run_number }}"
-          body: "자동 빌드 릴리즈입니다."
+          body: |
+      Unity 기반 뱀서라이크 프로젝트의 자동 빌드 릴리즈입니다.
+      이 릴리즈에는 최신 기능 및 수정 사항이 포함되어 있으며, Windows용 실행 파일(.exe)을 포함하고 있습니다.
+
+      🔄 GitHub에 push 시 자동으로 빌드 및 릴리스가 생성됩니다.
+      📦 Unity 6.1.7f1 + Git LFS + Firebase 기반
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
