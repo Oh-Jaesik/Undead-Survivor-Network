@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { Exp, Level, Kill, Time, Heatlth, Stat };
+    public enum InfoType { Exp, Level, Kill,MaxKill, BestTime, Time, Heatlth, Stat };
     public InfoType type;
 
     Text myText;
@@ -40,7 +40,22 @@ public class HUD : MonoBehaviour
             case InfoType.Kill:
                 myText.text = string.Format("{0:F0}", GameManager.instance.kill);
                 break;
-
+            
+            case InfoType.MaxKill:
+                myText.text = string.Format("{0:F0}", SessionData.maxKill);
+                break;
+            case InfoType.BestTime:
+                if (SessionData.bestTime <= 0f)
+                {
+                    myText.text = "-- : --";
+                }
+                else
+                {
+                    int bestMin = Mathf.FloorToInt(SessionData.bestTime / 60);
+                    int bestSec = Mathf.FloorToInt(SessionData.bestTime % 60);
+                    myText.text = string.Format("{0:D2} : {1:D2}", bestMin, bestSec);
+                }
+                break;
             case InfoType.Time:
                 float remainTime = GameManager.instance.maxGameTime - GameManager.instance.gameTime;
                 int min = Mathf.FloorToInt(remainTime / 60);

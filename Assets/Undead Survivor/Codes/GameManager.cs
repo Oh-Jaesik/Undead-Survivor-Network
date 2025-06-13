@@ -15,6 +15,7 @@ public class GameManager : NetworkBehaviour
     [SyncVar]
     public float gameTime;
     public float maxGameTime;
+    public float bestTime;
 
     [Header("# Player Info (shared)")]
 
@@ -23,6 +24,8 @@ public class GameManager : NetworkBehaviour
     public int level;
     [SyncVar]
     public int kill;
+    [SyncVar]
+    public int maxKill = 0;
     [SyncVar]
     public int exp;
     public int[] nextExp = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
@@ -53,11 +56,20 @@ public class GameManager : NetworkBehaviour
 
         instance = this;
     }
+    void Start()
+    {
+        FirebaseManager.Instance.LoadMaxKill();
+        FirebaseManager.Instance.LoadBestTime();
+    }
+
+
 
     // 플레이어별 고유 능력 구현! case 2, 3은 Item 코드에!
     public void GameStart(int id)
     {
         playerId = id;
+        maxKill = SessionData.maxKill;
+        bestTime = SessionData.bestTime;
         switch (id)
         {
             case 0:
@@ -96,6 +108,9 @@ public class GameManager : NetworkBehaviour
     {
         isLive = false;
 
+        int finalKill = kill;             // ?? 클리너로 인한 추가 킬 방지용 스냅샷
+        float finalTime = gameTime;
+
         yield return new WaitForSeconds(0.5f);
 
         uiResult.gameObject.SetActive(true);
@@ -110,6 +125,12 @@ public class GameManager : NetworkBehaviour
         {
             return FirebaseManager.Instance != null && FirebaseManager.Instance.dbRef != null;
         });//firebase 초기화
+
+        if (finalKill > SessionData.maxKill)
+            SessionData.maxKill = finalKill;
+
+        if (finalTime > SessionData.bestTime)
+            SessionData.bestTime = finalTime;
 
         FirebaseManager.Instance.SaveUserData();//데이터 저장
         Stop();
@@ -126,7 +147,11 @@ public class GameManager : NetworkBehaviour
     IEnumerator GameVictoryRoutine()
     {
         isLive = false;
-        enemyCleaner.SetActive(true);
+
+        int finalKill = kill;             // ?? 클리너 작동 전 킬 수 저장
+        float finalTime = gameTime;
+
+        enemyCleaner.SetActive(true);     // 몬스터 전체 제거
 
         yield return new WaitForSeconds(0.5f);
 
@@ -134,13 +159,18 @@ public class GameManager : NetworkBehaviour
         uiResult.Win();
 
         yield return new WaitUntil(() =>
-           FirebaseManager.Instance != null &&
-           FirebaseManager.Instance.dbRef != null
-       );//firebase 초기화
+            FirebaseManager.Instance != null &&
+            FirebaseManager.Instance.dbRef != null
+        );
+
+        if (finalKill > SessionData.maxKill)
+            SessionData.maxKill = finalKill;
+
+        if (finalTime > SessionData.bestTime)
+            SessionData.bestTime = finalTime;
 
         FirebaseManager.Instance.SaveUserData();
-
-        Stop();//데이터 저장
+        Stop();
     }
 
     public void GameRetry()

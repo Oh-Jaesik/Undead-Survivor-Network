@@ -38,6 +38,7 @@ public class LoginManager : MonoBehaviour
 
                             Debug.Log("회원가입 성공");
                             SessionData.userId = createTask.Result.User.UserId;
+                            FirebaseManager.Instance.LoadMaxKill();
 
                             SceneManager.LoadScene("SampleScene"); // playerId 없이 바로 씬 전환
                         });
@@ -46,6 +47,7 @@ public class LoginManager : MonoBehaviour
                 {
                     Debug.Log("로그인 성공");
                     SessionData.userId = task.Result.User.UserId;
+                    FirebaseManager.Instance.LoadMaxKill();
 
                     SceneManager.LoadScene(1); // playerId 없이 바로 씬 전환
                 }
