@@ -31,6 +31,7 @@ public class PlayerStyleText : NetworkBehaviour
 
     private Transform player;
     private TreeNode rootNode;
+    private bool hasStarted = false;
 
     void Start()
     {
@@ -42,11 +43,19 @@ public class PlayerStyleText : NetworkBehaviour
         player = transform.root;  // 가장 바깥의 루트가 player
 
         rootNode = LoadTreeFromJson();
-
-        // 서버에서만 60초 후 평가 시작
-        if (isServer)
-            StartCoroutine(EvaluateAfterDelay(60f, rootNode));
     }
+
+    private void Update()
+    {
+        if (!isServer || hasStarted) return;
+
+        if (GameManager.instance.gameTime >= 40f)
+        {
+            hasStarted = true;
+            StartCoroutine(EvaluateAfterDelay(rootNode));
+        }
+    }
+
 
     TreeNode LoadTreeFromJson()
     {
@@ -71,21 +80,24 @@ public class PlayerStyleText : NetworkBehaviour
         }
     }
 
-    IEnumerator EvaluateAfterDelay(float delay, TreeNode node)
+    IEnumerator EvaluateAfterDelay(TreeNode node)
     {
-        yield return new WaitForSeconds(delay);
+        //yield return new WaitForSeconds(delay);
+        yield return null;
 
         // 플레이어 데이터 읽기
         avg_distance = player.GetComponent<DistanceTracker>().avgDistance;
         hit_count = player.GetComponent<AttackTracker>().monsterHitCount;
         total_movement = player.GetComponent<PlayerTracker>().totalMovement;
-        play_time = player.GetComponent<TimeTracker>().playTime;
+        //play_time = player.GetComponent<TimeTracker>().playTime;
+        play_time = GameManager.instance.gameTime;
 
         Debug.Log($"서버에서 평가 시작: dist={avg_distance}, hit={hit_count}, total={total_movement}, time={play_time}");
 
         // 최종 플레이 스타일 평가
         playStyle = EvaluatePlayStyle(node, avg_distance, hit_count, total_movement, play_time);
         Debug.Log("서버에서 최종 평가 결과: " + playStyle);
+
     }
 
     string EvaluatePlayStyle(TreeNode node, float avg_distance, float hit_count, float total_movement, float play_time)
