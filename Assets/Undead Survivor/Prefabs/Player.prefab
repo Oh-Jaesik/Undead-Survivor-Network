@@ -186,7 +186,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   health: 0
-  maxHealth: 80
+  maxHealth: 100
   speed: 2
   statPoints: 1
   scanner: {fileID: 0}
