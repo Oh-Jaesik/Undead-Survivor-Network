@@ -47,11 +47,11 @@ public class Item : MonoBehaviour
                 switch (GameManager.instance.playerId)
                 {
                     case 2:
-                        GameManager.instance.weapon.CmdLevelUp(data.damages[level]+10, data.counts[level]);     // 데미지 증가
+                        GameManager.instance.weapon.CmdLevelUp(data.damages[level] + 10, data.counts[level]);     // 데미지 증가
                         break;
 
                     case 3:
-                        GameManager.instance.weapon.CmdLevelUp(data.damages[level], data.counts[level]+2);      // 카운트 증가
+                        GameManager.instance.weapon.CmdLevelUp(data.damages[level], data.counts[level] + 1);      // 카운트 증가
                         break;
 
                     default:
@@ -68,11 +68,11 @@ public class Item : MonoBehaviour
                 switch (GameManager.instance.playerId)
                 {
                     case 2:
-                        GameManager.instance.weapon1.CmdLevelUp(data.damages[level] + 10, data.counts[level]);
+                        GameManager.instance.weapon1.CmdLevelUp(data.damages[level], data.counts[level]);
                         break;
 
                     case 3:
-                        GameManager.instance.weapon1.CmdLevelUp(data.damages[level], data.counts[level] + 2);
+                        GameManager.instance.weapon1.CmdLevelUp(data.damages[level], data.counts[level] + 1);
                         break;
 
                     default:
@@ -99,7 +99,7 @@ public class Item : MonoBehaviour
 
             case ItemData.ItemType.Heal:
 
-                GameManager.instance.player.maxHealth += 100;       // Heal 레벨업시 이제 최대 체력 증가!
+                GameManager.instance.player.maxHealth += data.damages[level];       // Heal 레벨업시 이제 최대 체력 증가!
                 GameManager.instance.player.health = GameManager.instance.player.maxHealth;
                 level++;
                 break;
@@ -107,6 +107,7 @@ public class Item : MonoBehaviour
 
         GameManager.instance.player.statPoints--;       // 레벨업 버튼 클릭시 스탯 감소
 
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
 
         if (level == data.damages.Length)
         {

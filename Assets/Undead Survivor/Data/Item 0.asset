@@ -17,13 +17,13 @@ MonoBehaviour:
   itemName: "\uC0BD"
   itemDesc: 
   itemIcon: {fileID: -181907988, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  baseDamage: 5
-  baseCount: 3
+  baseDamage: 0
+  baseCount: 0
   damages:
-  - 5
   - 10
-  - 15
-  - 20
-  - 25
-  counts: 0100000002000000030000000400000005000000
+  - 11
+  - 12
+  - 13
+  - 14
+  counts: 0100000002000000020000000300000003000000
   projectile: {fileID: 8021207149015494698, guid: 33e5a36def0ef5a499ff80faac634e0e, type: 3}

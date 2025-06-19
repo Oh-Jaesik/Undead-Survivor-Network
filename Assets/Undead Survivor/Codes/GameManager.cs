@@ -28,7 +28,7 @@ public class GameManager : NetworkBehaviour
     public int maxKill = 0;
     [SyncVar]
     public int exp;
-    public int[] nextExp = { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+    public int[] nextExp;
 
     [Header("# Game Object")]
 
@@ -73,12 +73,12 @@ public class GameManager : NetworkBehaviour
         switch (id)
         {
             case 0:
-                player.maxHealth += 100;
-                player.health += 100;
+                player.maxHealth += 20;
+                player.health += 20;
                 break;
 
             case 1:
-                player.speed += 3;
+                player.speed += 1;
                 break;
         }
 

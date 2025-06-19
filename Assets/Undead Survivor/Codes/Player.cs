@@ -91,7 +91,7 @@ public class Player : NetworkBehaviour
     [Command]
     void CmdChangeAnimController(int index)
     {
-        anim.runtimeAnimatorController = animCon[index];
+        animControllerIndex = index;
     }
 
     [Command]

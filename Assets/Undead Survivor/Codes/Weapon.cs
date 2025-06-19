@@ -72,7 +72,7 @@ public class Weapon : NetworkBehaviour
         switch (id)
         {
             case 0:
-                speed = 150;
+                speed = 100;
                 Batch();
                 break;
             default:
@@ -92,11 +92,11 @@ public class Weapon : NetworkBehaviour
         switch (id)
         {
             case 0:
-                speed = 150 + 500 * GameManager.instance.gear0.rate;
+                speed = 100 + 300 * GameManager.instance.gear0.rate;
                 Batch();
                 break;
             case 1:
-                speed = 1f - 2 * GameManager.instance.gear0.rate;
+                speed = 1.2f - GameManager.instance.gear0.rate;
                 break;
         }
     }

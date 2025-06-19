@@ -15,6 +15,8 @@ public class HUD : MonoBehaviour
     {
         if (targetObject != null)
             targetObject.SetActive(!targetObject.activeSelf);
+
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     void Awake()
