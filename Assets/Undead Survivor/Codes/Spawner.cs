@@ -21,7 +21,7 @@ public class Spawner : NetworkBehaviour
             return;
 
         timer += Time.deltaTime;        // 몬스터 스폰 쿨타임
-        level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / 20f), spawnData.Length - 1);
+        level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / 15f), spawnData.Length - 1);
 
         if (timer > spawnData[level].spawnTime)     // 스폰 조건
         {
