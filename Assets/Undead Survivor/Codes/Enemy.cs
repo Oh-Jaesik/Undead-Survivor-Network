@@ -119,11 +119,10 @@ public class Enemy : NetworkBehaviour
         { player = collision.GetComponent<Bullet>().followTarget; }
 
         //StartCoroutine(KnockBack());      // 넉백 기능 삭제 (동기화 지연 사유)
-
+        player.GetComponent<AttackTracker>()?.RegisterHit();
         if (health > 0)
         {
             RpcPlayHitAnim();
-            player.GetComponent<AttackTracker>()?.RegisterHit();
             AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
         }
         else
